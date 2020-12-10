@@ -12,7 +12,7 @@ public class ProgettoEsameOopAgostinelliMonacoApplication {
 		System.out.println("ciao");
 		JsonHandler myJsonH=new JsonHandler();
 	  
-		myJsonH.chiamataAPI();
+		//myJsonH.chiamataAPI();
 		myJsonH.salvaFile("pippoh.txt");
 	}
 
