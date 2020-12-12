@@ -5,16 +5,12 @@ package application.json;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLConnection;
 import java.util.Iterator;
-import java.util.Scanner;
 import java.util.Vector;
 
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
+
 import java.io.BufferedWriter;
-import java.io.FileReader;
+//import java.io.FileReader;
 import java.io.FileWriter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -95,7 +91,7 @@ public class JsonHandler {
 			Vector<JSONObject> jo=new Vector<JSONObject>();
 			try {
 				JSONObject jsonObj= (JSONObject) JSONValue.parseWithException(data);
-				System.out.println("OK");
+				System.out.println("successo api e formattazione list folder");
 				jsonArr=(JSONArray)jsonObj.get("entries");
 				Iterator<JSONObject> iterator=(Iterator<JSONObject>)jsonArr.iterator();
 				while(iterator.hasNext()) {
@@ -120,11 +116,11 @@ public class JsonHandler {
 		 * @param url URL da cui utilizzare la chiamata API.
 		 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
 		 */
-		public JSONObject format_get_metadata(String data) {
+		public static JSONObject format_get_metadata(String data) {
 			JSONObject jsonObj=null;
 			try {
 				jsonObj = (JSONObject) JSONValue.parseWithException(data);
-				System.out.println("OK");
+				System.out.println("successo api e formattazione get metadata");
 				
 				//scrivo alcune caratteristiche del file
 				/*String file_id=(String)jsonObj.get("id");

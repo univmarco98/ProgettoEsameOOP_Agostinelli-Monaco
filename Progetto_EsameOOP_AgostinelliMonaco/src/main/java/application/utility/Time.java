@@ -20,6 +20,10 @@ public class Time {
 		this.minute=minute;
 	}
 	
+	public Time() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void set_year(int year) {
 		this.year=year;
 	}

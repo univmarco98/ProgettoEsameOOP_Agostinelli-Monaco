@@ -46,7 +46,7 @@ public class ApiHandler {
 			openConnection.setDoOutput(true);
 			
 			String jsonBody = "{\r\n"
-					+ "    \"path\": "+path+",\r\n"
+					+ "    \"path\": \"" + path + "\",\r\n"
 					+ "    \"include_media_info\": true,\r\n"
 					+ "    \"include_deleted\": true,\r\n"
 					+ "    \"include_has_explicit_shared_members\": false\r\n"
@@ -66,7 +66,6 @@ public class ApiHandler {
 
 				while ((line = buf.readLine()) != null) {
 					data += line;
-					System.out.println(line);
 				}
 
 			}
@@ -101,7 +100,7 @@ public class ApiHandler {
 			
 			String jsonBody = "{\r\n"
 					+ "    \"path\": \"" + path + "\",\r\n"
-					+ "    \"recursive\": false,\r\n"
+					+ "    \"recursive\": true,\r\n"
 					+ "    \"include_media_info\": false,\r\n"
 					+ "    \"include_deleted\": false,\r\n"
 					+ "    \"include_has_explicit_shared_members\": false,\r\n"
@@ -123,7 +122,6 @@ public class ApiHandler {
 
 				while ((line = buf.readLine()) != null) {
 					data += line;
-					System.out.println(line);
 				}
 
 			}

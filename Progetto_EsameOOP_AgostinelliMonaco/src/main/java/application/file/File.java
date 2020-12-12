@@ -2,6 +2,7 @@
  * 
  */
 package application.file;
+
 import application.utility.Time;
 
 /**
@@ -15,11 +16,10 @@ public class File extends Folder {
 	/**
 	 * 
 	 */
-	public File (String tag, String name, String path, String id, Time latsModify, String revision, int size) {
+	public File (String tag, String name, String path, String id) {
 		super (tag, name, path, id);
-		this.lastModify=latsModify;
-		this.revision=revision;
-		this.size=size;
+	//ho eliminato parte del costruttore perche non conosco gli ultimi 3 valore
+	//dopo aver fatto la list folder
 	}
 	
 	public void set_size(int size) {
