@@ -18,6 +18,7 @@ import java.net.URL;
  */
 public class ApiHandler {
 	private String token="apLbyiJWIa0AAAAAAAAAAaoW0voRsvsHVHefHG8-fiBH7UGA9tcr9JXvM4SWGncg";
+	private String cursor,has_more;
 	
 	/**
 	 * 
@@ -28,6 +29,18 @@ public class ApiHandler {
 	
 	public void setToken(String token) {
 		this.token=token;
+	}
+	
+	public void setCursor(String cursor) {
+		this.cursor=cursor;
+	}
+	
+	public void sethas_more(String has_more) {
+		this.has_more=has_more;
+	}
+	
+	public String gethas_more() {
+		return has_more;
 	}
 	
 	public String apicall_get_metadata(String path) {
@@ -106,6 +119,56 @@ public class ApiHandler {
 					+ "    \"include_has_explicit_shared_members\": false,\r\n"
 					+ "    \"include_mounted_folders\": true,\r\n"
 					+ "    \"include_non_downloadable_files\": true\r\n"
+					+ "}";
+			
+			try (OutputStream os = openConnection.getOutputStream()) {
+				byte[] input = jsonBody.getBytes("utf-8");
+				os.write(input, 0, input.length);
+			}
+			
+
+			InputStream in = openConnection.getInputStream();
+
+			try {
+				InputStreamReader inR = new InputStreamReader(in);
+				BufferedReader buf = new BufferedReader(inR);
+
+				while ((line = buf.readLine()) != null) {
+					data += line;
+				}
+
+			}
+			finally {
+				in.close();
+			}
+			
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
+	public String apicall_list_folder_continue() {
+		
+		String data = "";
+		String line = "";
+		String url="https://api.dropboxapi.com/2/files/list_folder/continue";
+		try {
+
+			HttpURLConnection openConnection = (HttpURLConnection) new URL(url).openConnection();
+			openConnection.setRequestMethod("POST"); //one of: GET POST HEAD OPTIONS PUT DELETE TRACE are legal, subject to protocol restrictions
+			openConnection.setRequestProperty("Authorization",
+					"Bearer "+token);
+			openConnection.setRequestProperty("Content-Type", "application/json");
+			openConnection.setRequestProperty("Accept", "application/json");
+			openConnection.setDoOutput(true);
+			
+			String jsonBody = "{\r\n"
+					+ "    \"cursor\": \""+cursor+"\"\r\n"
 					+ "}";
 			
 			try (OutputStream os = openConnection.getOutputStream()) {

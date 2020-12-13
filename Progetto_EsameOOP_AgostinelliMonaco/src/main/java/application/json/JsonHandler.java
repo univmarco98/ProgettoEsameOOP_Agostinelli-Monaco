@@ -92,6 +92,9 @@ public class JsonHandler {
 			try {
 				JSONObject jsonObj= (JSONObject) JSONValue.parseWithException(data);
 				System.out.println("successo api e formattazione list folder");
+				String cursor=jsonObj.get("cursor").toString();
+				String has_more=jsonObj.get("has_more").toString();
+				
 				jsonArr=(JSONArray)jsonObj.get("entries");
 				Iterator<JSONObject> iterator=(Iterator<JSONObject>)jsonArr.iterator();
 				while(iterator.hasNext()) {
@@ -100,6 +103,16 @@ public class JsonHandler {
 				//scrivo alcune caratteristiche del file
 				/*String file_id=(String)jsonObj.get("id");
 				System.out.println(file_id);*/
+				
+				//ho crato l'oggetto aggiungere per verificare se chiamare continue o no
+				JSONObject aggiungere=(JSONObject) JSONValue.parseWithException("{\r\n"
+						+ "    \"cursor\": \"" + cursor + "\",\r\n"
+						+ "    \"has_more\": \""+has_more+"\"\r\n"
+						+ "}");
+				
+				
+				jo.add(aggiungere);
+				System.out.println(jo.size());
 			}
 			catch (ParseException e) {
 				e.printStackTrace();

@@ -23,25 +23,48 @@ public class ProgettoEsameOopAgostinelliMonacoApplication {
 		//SpringApplication.run(ProgettoEsameOopAgostinelliMonacoApplication.class, args);
 		
 		//eseguo chiamata a list folder e formatto la risposta
-		String strlistfolder=new ApiHandler().apicall_list_folder("");
+		ApiHandler Api=new ApiHandler();
+		
+		String strlistfolder=Api.apicall_list_folder("");
+		
 		Vector<JSONObject> jsonlistfile=JsonHandler.format_list_folder(strlistfolder);
 		
+		JSONObject info_per_continuare = jsonlistfile.lastElement();
+		jsonlistfile.remove(jsonlistfile.lastElement());
+		System.out.println(info_per_continuare.get("cursor"));
+		Api.setCursor( (String) info_per_continuare.get("cursor") );
+		Api.sethas_more( (String) info_per_continuare.get("has_more") );
+		
 		//creo i 3 array di tipo diverso
-		Iterator<JSONObject> iterator =(Iterator<JSONObject>) jsonlistfile.iterator();
+		Iterator<JSONObject> iterator =(Iterator<JSONObject>) jsonlistfile.iterator();		
 		ArrayType Array_diviso_per_tipo= new ArrayType();
 		while(iterator.hasNext()) {
 			Array_diviso_per_tipo.add_element(iterator.next());
 		}
 		
+		if ( Boolean.parseBoolean(info_per_continuare.get("has_more").toString() )) {
+			System.out.println("sono dentro l'if");
+			strlistfolder=Api.apicall_list_folder_continue();
+			
+			Vector<JSONObject> jsonlistfile1=JsonHandler.format_list_folder(strlistfolder);
+			jsonlistfile1.remove(jsonlistfile1.lastElement());
+			
+			Iterator<JSONObject> iterator1 =(Iterator<JSONObject>) jsonlistfile1.iterator();		
+			while(iterator1.hasNext()) {
+				Array_diviso_per_tipo.add_element(iterator1.next());
+			}
+		}
 		
-		//devo fare i get nmetadata solo dei file, creo iteratore per scorrere il vector che li contiene
+		
+		//devo fare i get metadata solo dei file, creo iteratore per scorrere il vector che li contiene
 		Vector<File> vectorFile = (Vector<File>) Array_diviso_per_tipo.get_vector_file();
 		Iterator<File> file =(Iterator<File>) vectorFile.iterator();
 		
-		
+		int i = 1;
 		while (file.hasNext() ) {
 			File temp=file.next();
-			
+			System.out.print(i+" - ");
+			i=i+1;
 			//effettuo chiama e formattazione get metadata
 			String path=temp.get_path();
 			String strgetmetadatar=new ApiHandler().apicall_get_metadata(path);
