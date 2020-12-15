@@ -4,57 +4,28 @@
 package application.json;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
-
-
-import java.io.BufferedWriter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 //import java.io.FileReader;
-import java.io.FileWriter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
-import application.json.ApiHandler;
+import application.utility.ArrayType;
 
 /**
  * @author MARCO
  *
  */
 public class JsonHandler {
-		
-		//private JSONArray jsonArr;
-		//private JSONObject jsonObj;
-		
-		public JsonHandler() {
-			//this.jsonArr = new JSONArray();
-			//this.jsonObj = new JSONObject();
-		}
-		
-		/*public JSONArray getJsonArray() {
-			return this.jsonArr;
-		}
-		
-		public void setArray(JSONArray jsonArr) {
-			this.jsonArr = jsonArr;
-		}
-
-		public JSONObject getJsonObject() {
-			return this.jsonObj;
-		}
-
-		public void setObject(JSONObject jsonObj) {
-			this.jsonObj = jsonObj;
-		}*/
-		
-		/**
-		 * Inserisco un JSONObject nel mio JSONArray.
-		 * @param jo JSONOnject
-		 */
-		/*public void insertObject(JSONObject jsonObj) {
-			this.jsonArr.add(jsonObj);
-		}*/
 		
 		/**
 		 * Metodo per salvare un oggetto in un file di testo .json.
@@ -63,10 +34,14 @@ public class JsonHandler {
 		 * @param nome_file Nome del file in cui salvare l'oggetto.
 		 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
 		 */
-		public static void salvaFile(String nome_file, JSONObject jsonObj) {
+		public static void saveFile(ArrayType aT) {
+			SimpleDateFormat data = new SimpleDateFormat();
+			data.applyPattern("yyyyMMdd");
+			String dataStr = data.format(new Date()); // data corrente (20 febbraio 2014)
+			String nome_file = (dataStr+".txt");
 			try {
-				PrintWriter file_output = new PrintWriter(new BufferedWriter(new FileWriter(nome_file)));
-				file_output.println(jsonObj);
+				ObjectOutputStream file_output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("C:\\Users\\MARCO\\eclipse-workspace\\Progetto_EsameOOP_AgostinelliMonaco\\DataBase\\"+nome_file)));
+				file_output.writeObject(aT);;
 				file_output.close();
 				System.out.println("File salvato!");
 			} catch (IOException e) {
@@ -81,8 +56,21 @@ public class JsonHandler {
 		 * @param nome_file Nome del file da cui leggere l'oggetto.
 		 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
 		 */
-		public void caricaFile(String nome_file, boolean isObject) {
-			
+		public static ArrayType caricaFile(String nome_file) {
+			ArrayType aT=null;
+			try {
+				ObjectInputStream file_input = new ObjectInputStream(new BufferedInputStream(new FileInputStream("C:\\Users\\MARCO\\eclipse-workspace\\Progetto_EsameOOP_AgostinelliMonaco\\DataBase\\"+nome_file)));
+				aT=(ArrayType)file_input.readObject();
+				file_input.close();
+				System.out.println("File salvato!");
+			}
+			catch(ClassNotFoundException e){
+				e.printStackTrace();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			return aT;
 		}
 		
 		
@@ -97,6 +85,7 @@ public class JsonHandler {
 				
 				jsonArr=(JSONArray)jsonObj.get("entries");
 				Iterator<JSONObject> iterator=(Iterator<JSONObject>)jsonArr.iterator();
+				
 				while(iterator.hasNext()) {
 					jo.add(iterator.next());
 				}

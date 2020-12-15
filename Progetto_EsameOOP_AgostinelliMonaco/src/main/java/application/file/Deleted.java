@@ -3,11 +3,13 @@
  */
 package application.file;
 
+import java.io.Serializable;
+
 /**
  * @author Matteo
  *
  */
-public class Deleted {
+public class Deleted implements Serializable {
 	private String tag,name,path;
 
 	public Deleted(String tag, String name, String path) {

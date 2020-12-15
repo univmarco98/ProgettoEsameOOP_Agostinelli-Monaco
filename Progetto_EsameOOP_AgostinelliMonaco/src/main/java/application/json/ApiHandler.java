@@ -17,7 +17,7 @@ import java.net.URL;
  *
  */
 public class ApiHandler {
-	private String token="apLbyiJWIa0AAAAAAAAAAaoW0voRsvsHVHefHG8-fiBH7UGA9tcr9JXvM4SWGncg";
+	private static String token="apLbyiJWIa0AAAAAAAAAAaoW0voRsvsHVHefHG8-fiBH7UGA9tcr9JXvM4SWGncg";
 	private String cursor,has_more;
 	
 	/**
@@ -35,11 +35,11 @@ public class ApiHandler {
 		this.cursor=cursor;
 	}
 	
-	public void sethas_more(String has_more) {
+	public void set_has_more(String has_more) {
 		this.has_more=has_more;
 	}
 	
-	public String gethas_more() {
+	public String get_has_more() {
 		return has_more;
 	}
 	
@@ -115,7 +115,7 @@ public class ApiHandler {
 					+ "    \"path\": \"" + path + "\",\r\n"
 					+ "    \"recursive\": true,\r\n"
 					+ "    \"include_media_info\": false,\r\n"
-					+ "    \"include_deleted\": false,\r\n"
+					+ "    \"include_deleted\": true,\r\n"
 					+ "    \"include_has_explicit_shared_members\": false,\r\n"
 					+ "    \"include_mounted_folders\": true,\r\n"
 					+ "    \"include_non_downloadable_files\": true\r\n"

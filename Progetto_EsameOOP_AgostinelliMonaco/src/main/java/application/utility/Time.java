@@ -3,11 +3,13 @@
  */
 package application.utility;
 
+import java.io.Serializable;
+
 /**
  * @author Matteo
  *
  */
-public class Time {
+public class Time implements Serializable{
 	private int day,month,year,hour,minute;
 	/**
 	 * 

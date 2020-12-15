@@ -2,9 +2,9 @@
  * 
  */
 package application.utility;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import java.io.Serializable;
 import java.util.Vector;
 import application.file.*;
 import application.json.JsonHandler;
@@ -13,7 +13,7 @@ import application.json.JsonHandler;
  * @author Matteo
  *
  */
-public class ArrayType {
+public class ArrayType implements Serializable {
 	private Vector<Deleted> vecDeleted = new Vector<Deleted>();
 	private Vector<Folder>  vecFolder  = new Vector<Folder>();
 	private Vector<File>    vecFile    = new Vector<File>();
@@ -40,7 +40,6 @@ public class ArrayType {
 		
 		else
 			System.out.print("Tipo non trovato");
-		System.out.println("deleted "+ vecDeleted.size() +" - folder "+vecFolder.size()  +" -file "+vecFile.size() +" total " +(vecDeleted.size()+vecFolder.size()+vecFile.size()));
 	}
 	
 	private void add_deleted(JSONObject jsonDeleted) {
