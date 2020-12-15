@@ -22,7 +22,7 @@ public class Routine_GetAndSave_Datas {
 		
 		JSONObject info_per_continuare = jsonlistfile.lastElement();
 		jsonlistfile.remove(jsonlistfile.lastElement());
-		System.out.println(info_per_continuare.get("cursor"));
+		
 		api.setCursor( (String) info_per_continuare.get("cursor") );
 		api.set_has_more( (String) info_per_continuare.get("has_more") );
 		
@@ -34,14 +34,13 @@ public class Routine_GetAndSave_Datas {
 		}
 		
 		while ( Boolean.parseBoolean(info_per_continuare.get("has_more").toString() )) {
-			System.out.println("sono dentro l'if");
 			strlistfolder=api.apicall_list_folder_continue();
 			
 			Vector<JSONObject> jsonlistfile1=JsonHandler.format_list_folder(strlistfolder);
 
 			info_per_continuare = jsonlistfile1.lastElement();
 			jsonlistfile1.remove(jsonlistfile1.lastElement());
-			System.out.println(info_per_continuare.get("cursor"));
+
 			api.setCursor( (String) info_per_continuare.get("cursor") );
 			api.set_has_more( (String) info_per_continuare.get("has_more") );
 			

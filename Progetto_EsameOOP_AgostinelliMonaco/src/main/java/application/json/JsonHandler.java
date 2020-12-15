@@ -40,7 +40,7 @@ public class JsonHandler {
 			String dataStr = data.format(new Date()); // data corrente (20 febbraio 2014)
 			String nome_file = (dataStr+".txt");
 			try {
-				ObjectOutputStream file_output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("C:\\Users\\MARCO\\eclipse-workspace\\Progetto_EsameOOP_AgostinelliMonaco\\DataBase\\"+nome_file)));
+				ObjectOutputStream file_output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("D:\\Users\\Matteo\\Documenti\\Eclipse\\ProgettoEsameOOP_Agostinelli-Monaco\\Progetto_EsameOOP_AgostinelliMonaco\\DataBase\\"+nome_file)));
 				file_output.writeObject(aT);;
 				file_output.close();
 				System.out.println("File salvato!");
@@ -59,7 +59,7 @@ public class JsonHandler {
 		public static ArrayType caricaFile(String nome_file) {
 			ArrayType aT=null;
 			try {
-				ObjectInputStream file_input = new ObjectInputStream(new BufferedInputStream(new FileInputStream("C:\\Users\\MARCO\\eclipse-workspace\\Progetto_EsameOOP_AgostinelliMonaco\\DataBase\\"+nome_file)));
+				ObjectInputStream file_input = new ObjectInputStream(new BufferedInputStream(new FileInputStream("D:\\Users\\Matteo\\Documenti\\Eclipse\\ProgettoEsameOOP_Agostinelli-Monaco\\Progetto_EsameOOP_AgostinelliMonaco\\DataBase\\"+nome_file)));
 				aT=(ArrayType)file_input.readObject();
 				file_input.close();
 				System.out.println("File salvato!");
@@ -101,7 +101,6 @@ public class JsonHandler {
 				
 				
 				jo.add(aggiungere);
-				System.out.println(jo.size());
 			}
 			catch (ParseException e) {
 				e.printStackTrace();
