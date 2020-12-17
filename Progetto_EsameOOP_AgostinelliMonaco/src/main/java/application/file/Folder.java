@@ -3,11 +3,17 @@
  */
 package application.file;
 
+import org.json.simple.JSONObject;
+
 /**
  * @author Matteo
  *
  */
 public class Folder extends Deleted {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
 	private String id;
 
 	public Folder(String tag, String name, String path, String id) {
@@ -23,6 +29,9 @@ public class Folder extends Deleted {
 		this.id=id;
 	}
 	
-	
-
+	public JSONObject toJSONObject() {
+		JSONObject result=super.toJSONObject();
+		result.put("id", this.id);
+		return result;
+	}
 }

@@ -5,11 +5,17 @@ package application.file;
 
 import java.io.Serializable;
 
+import org.json.simple.JSONObject;
+
 /**
  * @author Matteo
  *
  */
 public class Deleted implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
 	private String tag,name,path;
 	
 	public Deleted() {
@@ -50,6 +56,11 @@ public class Deleted implements Serializable {
 		this.tag=tag;
 	}
 	
-
-
+	public JSONObject toJSONObject() {
+		JSONObject result=new JSONObject();
+		result.put("type", this.tag);
+		result.put("name", this.name);
+		result.put("path", this.path);
+		return result;
+	}
 }

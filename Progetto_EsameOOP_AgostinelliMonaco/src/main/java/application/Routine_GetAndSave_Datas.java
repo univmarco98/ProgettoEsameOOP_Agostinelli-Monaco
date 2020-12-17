@@ -9,6 +9,7 @@ import application.file.File;
 import application.json.ApiHandler;
 import application.json.JsonHandler;
 import application.utility.ArrayType;
+import application.utility.FileHandler;
 import application.utility.Time;
 
 public class Routine_GetAndSave_Datas {
@@ -101,6 +102,6 @@ public class Routine_GetAndSave_Datas {
 		}//while
 		System.out.println("Ho finito");
 
-		JsonHandler.saveFile(Array_diviso_per_tipo);
+		FileHandler.saveFile(Array_diviso_per_tipo);
 	}
 }

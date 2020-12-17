@@ -1,7 +1,7 @@
 /**
  * 
  */
-package stats_and_filtres;
+package stats_and_filters;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,6 +11,7 @@ import java.util.Vector;
 import application.file.*;
 import application.json.JsonHandler;
 import application.utility.ArrayType;
+import application.utility.FileHandler;
 
 /**
  * @author Matteo
@@ -25,31 +26,42 @@ public class Statistics {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static void difference(String data1, String data2) {
+	public static Vector<Vector> difference(String data1, String data2) {
 		
-		ArrayType aT1=JsonHandler.caricaFile(data1+".txt");
-		ArrayType aT2=JsonHandler.caricaFile(data2+".txt");
+		ArrayType aT1=FileHandler.caricaFile(data1+".txt");
+		ArrayType aT2=FileHandler.caricaFile(data2+".txt");
 		
 		System.out.println("confronto deleted");
 
-		Vector<Deleted> deleted = JsonHandler.caricaFile(data2+".txt").get_vector_deleted();
+		Vector<Deleted> deleted = FileHandler.caricaFile(data2+".txt").get_vector_deleted();
 		Vector<Integer> erPosition=findEreseableDel(aT1.get_vector_deleted(), aT2.get_vector_deleted());
 		deleted=deletedVelementDel( deleted, erPosition);
 		
-		Vector<Folder> folder = JsonHandler.caricaFile(data2+".txt").get_vector_folder();
+		Vector<Folder> folder = FileHandler.caricaFile(data2+".txt").get_vector_folder();
 		erPosition=findEreseableFol(  aT1.get_vector_folder(), aT2.get_vector_folder());
 		folder=deletedVelementFol( folder, erPosition);
 		
-		Vector<File> file = JsonHandler.caricaFile(data2+".txt").get_vector_file();
-		Vector<Vector> all=findEreseableFil(  aT1.get_vector_file(), aT2.get_vector_file());
-		erPosition=(Vector<Integer>)all.get(0);
+		Vector<File> modificatedFile = FileHandler.caricaFile(data2+".txt").get_vector_file();
+		Vector<File> newAddedFile = FileHandler.caricaFile(data2+".txt").get_vector_file();
+		Vector<Vector> all=findEreseableFil(  aT1.get_vector_file(), aT2.get_vector_file(), data2);
+		erPosition=(Vector<Integer>)all.get(0); //non modificati da "eliminare"
+		Vector<Integer> newPosition=(Vector<Integer>)all.get(1);
+		//
+		modificatedFile=deletedVelementFil( modificatedFile, erPosition);
+		newAddedFile=deletedVelementFil( newAddedFile, newPosition);
 		
-		file=deletedVelementFil( file, erPosition);
+		System.out.println("deleted elements: "+deleted.size());
+		System.out.println("new folders: "+folder.size());
+		System.out.println("\tmodificated files: "+modificatedFile.size());
+		System.out.println("\tnew added files: "+newAddedFile.size());
 		
-	System.out.println(deleted.size());
-	System.out.println(folder.size());
-	System.out.println(file.size());
-		
+		//uso il Vector<Vector> all per fare il return senza usare un Vector<Vector> nuovo
+		all.clear();
+		all.add(deleted);
+		all.add(folder);
+		all.add(modificatedFile);
+		all.add(newAddedFile);
+		return all;
 	}
 	
 	private static Vector<Integer> findEreseableDel(Vector<Deleted> aT1, Vector<Deleted> aT2){
@@ -100,39 +112,43 @@ public class Statistics {
 		return erPosition;
 	}
 	
-	private static Vector<Vector> findEreseableFil(Vector<File> aT1, Vector<File> aT2){
-		
-		SimpleDateFormat data = new SimpleDateFormat();
-		data.applyPattern("yyyyMMddhhmm");
-		String dataOggi = data.format(new Date()); // data corrente 202012171327
+	private static Vector<Vector> findEreseableFil(Vector<File> aT1, Vector<File> aT2, String date2){
 		
 		Vector<Integer> erPosition= new Vector<Integer>();
-		Vector<Integer> newPosition= new Vector<Integer>();
+		Vector<Integer> notNewPosition= new Vector<Integer>();
 		
 		Iterator<File> delI2 = (Iterator<File>) aT2.iterator();
 		int position=0;
+		boolean flag=false;
 		while(delI2.hasNext()) {
 			File tmp2 = delI2.next();
-			
-			Iterator<File> delI1=(Iterator<File>) aT1.iterator();
-			while (delI1.hasNext() ) {
-				File tmp1=delI1.next();
-				
-				if( tmp1.get_id().equalsIgnoreCase(tmp2.get_id() )){
-						if( tmp1.get_revision().equalsIgnoreCase(tmp2.get_revision()) ) {
-							erPosition.add(position);//è uguale a prima
-							break;
-						}
+			if( tmp2.get_lastModify().toString().equals(date2)  ) {
+				Iterator<File> delI1=(Iterator<File>) aT1.iterator();
+				while (delI1.hasNext() ) {
+					File tmp1=delI1.next();
+					
+					if( (tmp1.get_id().equalsIgnoreCase(tmp2.get_id())) ) {//file non modificato
+						erPosition.add(position);//è uguale a prima
+						flag=true;
+						break;
+					}
 				}
-				else if ( tmp1.get_lastModify().toString().equals(dataOggi)  )
-					newPosition.add(position);
-				
-				}	
-			position++;
+				//if(erPosition.lastElement()!=position) {//CONDIZIONE EQUIVALENTE (PIACEVA A MATTEO) 
+				if(!flag) { //file non nuovo
+					notNewPosition.add(position);
+				}
+				flag=false;
 			}
+			else //file ne nuovo ne modificato
+			{
+				erPosition.add(position);
+				notNewPosition.add(position);
+			}
+			position++;
+		}
 		Vector<Vector> result= new Vector<Vector>();
 		result.add(erPosition);
-		result.add(newPosition);
+		result.add(notNewPosition);
 		return result;
 	}
 	

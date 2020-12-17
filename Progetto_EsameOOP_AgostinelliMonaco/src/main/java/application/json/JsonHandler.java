@@ -3,23 +3,16 @@
  */
 package application.json;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 //import java.io.FileReader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
-import application.utility.ArrayType;
+
+import application.file.Deleted;
+import stats_and_filters.Statistics;
 
 /**
  * @author MARCO
@@ -27,51 +20,9 @@ import application.utility.ArrayType;
  */
 public class JsonHandler {
 		
-		/**
-		 * Metodo per salvare un oggetto in un file di testo .json.
-		 * Posso scegliere se salvare un JSONObject oppure un JSONArray.
-		 * 
-		 * @param nome_file Nome del file in cui salvare l'oggetto.
-		 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
-		 */
-		public static void saveFile(ArrayType aT) {
-			SimpleDateFormat data = new SimpleDateFormat();
-			data.applyPattern("yyyyMMdd");
-			String dataStr = data.format(new Date()); // data corrente (20 febbraio 2014)
-			String nome_file = (dataStr+".txt");
-			try {
-				ObjectOutputStream file_output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("DataBase\\"+nome_file)));
-				file_output.writeObject(aT);;
-				file_output.close();
-				System.out.println("File salvato!");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		
-		/**
-		 * Metodo per leggere un oggetto da un file di testo .json.
-		 * Posso scegliere se caricare un JSONObject oppure un JSONArray.
-		 * 
-		 * @param nome_file Nome del file da cui leggere l'oggetto.
-		 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
-		 */
-		public static ArrayType caricaFile(String nome_file) {
-			ArrayType aT=null;
-			try {
-				ObjectInputStream file_input = new ObjectInputStream(new BufferedInputStream(new FileInputStream("DataBase\\"+nome_file)));
-				aT=(ArrayType)file_input.readObject();
-				file_input.close();
-				System.out.println("File caricato!");
-			}
-			catch(ClassNotFoundException e){
-				e.printStackTrace();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-			return aT;
-		}
+		
+		
 		
 		
 		public static Vector<JSONObject> format_list_folder(String data) {
@@ -133,9 +84,33 @@ public class JsonHandler {
 			}
 			return jsonObj;
 		}
+		public static JSONObject toJSONObject(Deleted d) {
+			return d.toJSONObject();
+		}
 		
 		public static String getFileType(JSONObject jsonObj) {
 			return(jsonObj.get(".tag").toString());
 		}
-
+		
+		public static JSONObject ritornaJ() {
+			Vector<Vector> vv=Statistics.difference("20201216","20201217");
+			Iterator<Vector> vvI=vv.iterator();
+			while(vvI.hasNext()) {
+				Vector<Object> temp=vvI.next();
+				Iterator<Object> oI=temp.iterator();
+				while(oI.hasNext()) {
+					Object tempO=oI.next();
+					tempO=JsonHandler.toJSONObject((Deleted)tempO);
+					System.out.println(tempO);
+				}
+			}
+			JSONObject jo=new JSONObject();
+			jo.put("Deleted", vv.get(0));
+			jo.put("Folder", vv.get(1));
+			jo.put("Modified File", vv.get(2));
+			jo.put("New File", vv.get(3));
+			System.out.println(jo);
+			
+			return jo;
+		}
 }

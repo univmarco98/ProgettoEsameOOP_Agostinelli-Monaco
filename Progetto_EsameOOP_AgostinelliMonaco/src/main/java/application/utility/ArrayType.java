@@ -14,6 +14,10 @@ import application.json.JsonHandler;
  *
  */
 public class ArrayType implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
 	private Vector<Deleted> vecDeleted = new Vector<Deleted>();
 	private Vector<Folder>  vecFolder  = new Vector<Folder>();
 	private Vector<File>    vecFile    = new Vector<File>();

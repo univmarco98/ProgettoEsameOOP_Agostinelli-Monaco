@@ -12,6 +12,10 @@ import application.file.File;
  *
  */
 public class Time implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
 	private int day,month,year,hour,minute;
 	/**
 	 * 
@@ -69,7 +73,13 @@ public class Time implements Serializable{
 	}
 	
 	public String toString(){
-		String tmp = Integer.toString(year)+Integer.toString(month)+Integer.toString(day)+Integer.toString(hour)+Integer.toString(minute);
+		String tmp = Integer.toString(year);
+		if(this.month<10)
+			tmp+="0";
+		tmp+=Integer.toString(month);
+		if(this.day<10)
+			tmp+="0";
+		tmp+=Integer.toString(day);
 		return tmp;
 	}
 

@@ -3,6 +3,8 @@
  */
 package application.file;
 
+import org.json.simple.JSONObject;
+
 import application.utility.Time;
 
 /**
@@ -10,6 +12,10 @@ import application.utility.Time;
  *
  */
 public class File extends Folder {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
 	Time lastModify;
 	String revision;
 	int size;
@@ -46,4 +52,11 @@ public class File extends Folder {
 		return this.lastModify;
 	}
 
+	public JSONObject toJSONObject() {
+		JSONObject result=super.toJSONObject();
+		result.put("last modify", this.lastModify.toString());
+		result.put("size", this.size);
+		result.put("revision", this.revision);
+		return result;
+	}
 }
