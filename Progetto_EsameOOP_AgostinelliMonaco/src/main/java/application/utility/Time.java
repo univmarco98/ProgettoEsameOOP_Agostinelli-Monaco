@@ -5,6 +5,8 @@ package application.utility;
 
 import java.io.Serializable;
 
+import application.file.File;
+
 /**
  * @author Matteo
  *
@@ -64,6 +66,11 @@ public class Time implements Serializable{
 	
 	public int set_minute() {
 		return this.minute;
+	}
+	
+	public String toString(){
+		String tmp = Integer.toString(year)+Integer.toString(month)+Integer.toString(day)+Integer.toString(hour)+Integer.toString(minute);
+		return tmp;
 	}
 
 }

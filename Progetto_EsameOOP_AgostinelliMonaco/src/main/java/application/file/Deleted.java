@@ -11,7 +11,13 @@ import java.io.Serializable;
  */
 public class Deleted implements Serializable {
 	private String tag,name,path;
-
+	
+	public Deleted() {
+		this.path=null;
+		this.name=null;
+		this.tag=null;
+	}
+	
 	public Deleted(String tag, String name, String path) {
 		this.path=path;
 		this.name=name;
