@@ -33,9 +33,17 @@ public class Routine_GetAndSave_Datas {
 		while(iterator.hasNext()) {
 			Array_diviso_per_tipo.add_element(iterator.next());
 		}
-		
+		int a=0;
 		while ( Boolean.parseBoolean(info_per_continuare.get("has_more").toString() )) {
 			strlistfolder=api.apicall_list_folder_continue();
+			
+			if(a==0)
+				System.out.print("\nLoading");
+			else
+				System.out.print("..");
+			a++;
+			if(a==13)
+				a=0;
 			
 			Vector<JSONObject> jsonlistfile1=JsonHandler.format_list_folder(strlistfolder);
 

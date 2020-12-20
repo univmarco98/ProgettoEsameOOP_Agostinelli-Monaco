@@ -4,6 +4,7 @@
 package application.json;
 
 import java.util.Iterator;
+
 import java.util.Vector;
 //import java.io.FileReader;
 import org.json.simple.JSONArray;
@@ -20,25 +21,22 @@ import stats_and_filters.Statistics;
  */
 public class JsonHandler {
 		
-		
-		
-		
-		
-		
 		public static Vector<JSONObject> format_list_folder(String data) {
 			JSONArray jsonArr=null;
 			Vector<JSONObject> jo=new Vector<JSONObject>();
 			try {
 				JSONObject jsonObj= (JSONObject) JSONValue.parseWithException(data);
-				System.out.println("successo api e formattazione list folder");
+			//System.out.println("successo api e formattazione list folder");
 				String cursor=jsonObj.get("cursor").toString();
 				String has_more=jsonObj.get("has_more").toString();
 				
 				jsonArr=(JSONArray)jsonObj.get("entries");
 				Iterator<JSONObject> iterator=(Iterator<JSONObject>)jsonArr.iterator();
-				
+
 				while(iterator.hasNext()) {
+				
 					jo.add(iterator.next());
+
 				}
 				//scrivo alcune caratteristiche del file
 				/*String file_id=(String)jsonObj.get("id");
@@ -93,24 +91,47 @@ public class JsonHandler {
 		}
 		
 		public static JSONObject ritornaJ() {
-			Vector<Vector> vv=Statistics.difference("20201216","20201217");
+			//Vector<Vector> vv=Statistics.difference("20201217","20201218");
+			Vector<Vector> vv=Statistics.difference("20201219","20201220");
 			Iterator<Vector> vvI=vv.iterator();
 			while(vvI.hasNext()) {
+
 				Vector<Object> temp=vvI.next();
+	//temp = deleted poi folder poi file poi file
+				
 				Iterator<Object> oI=temp.iterator();
 				while(oI.hasNext()) {
 					Object tempO=oI.next();
 					tempO=JsonHandler.toJSONObject((Deleted)tempO);
-					System.out.println(tempO);
+					System.out.println("tempO=---> "+ tempO );
 				}
+			
 			}
 			JSONObject jo=new JSONObject();
-			jo.put("Deleted", vv.get(0));
-			jo.put("Folder", vv.get(1));
-			jo.put("Modified File", vv.get(2));
-			jo.put("New File", vv.get(3));
-			System.out.println(jo);
+		/*	Vector<JSONObject> deleted=(Vector<JSONObject>) vv.get(0).clone();
+			Vector<JSONObject> folder=(Vector<JSONObject>) vv.get(1).clone();
+			Vector<JSONObject> modFile=(Vector<JSONObject>) vv.get(2).clone();
+			Vector<JSONObject> newFile=(Vector<JSONObject>) vv.get(3).clone();
 			
+			System.out.println("test---> "+vv.get(0).get(0) );
+			System.out.println("test---> "+modFile.toString() );
+						
+			jo.put("Deleted", deleted);
+			jo.put("Folder", folder);
+			
+			jo.put("Modified File", modFile);
+			jo.put("New File", newFile);
+		//*/	
+			
+			jo.put("Deleted", (Vector<JSONObject>) vv.get(0));
+			jo.put("Folder", (Vector<JSONObject>) vv.get(1));
+			
+	/*		jo.put("Modified File", (Vector<JSONObject>) vv.get(2));
+			jo.put("New File", (Vector<JSONObject>) vv.get(3));
+	//*/		
+			jo.put("error", "false");
+			System.out.println( (Vector<JSONObject>) vv.get(0) );
+			System.out.println( "jo---> " + jo );
 			return jo;
 		}
 }

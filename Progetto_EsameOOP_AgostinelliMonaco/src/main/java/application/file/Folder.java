@@ -3,13 +3,15 @@
  */
 package application.file;
 
+import java.io.Serializable;
+
 import org.json.simple.JSONObject;
 
 /**
  * @author Matteo
  *
  */
-public class Folder extends Deleted {
+public class Folder extends Deleted implements Serializable{
 	/**
 	 * 
 	 */

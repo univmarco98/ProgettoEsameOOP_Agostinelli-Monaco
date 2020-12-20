@@ -3,6 +3,8 @@
  */
 package application.file;
 
+import java.io.Serializable;
+
 import org.json.simple.JSONObject;
 
 import application.utility.Time;
@@ -11,7 +13,7 @@ import application.utility.Time;
  * @author Matteo
  *
  */
-public class File extends Folder {
+public class File extends Folder implements Serializable {
 	/**
 	 * 
 	 */
