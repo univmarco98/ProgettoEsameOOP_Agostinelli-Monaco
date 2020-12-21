@@ -6,12 +6,15 @@ package application.utility;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import application.exception.MyFileNotFoundException;
 
 /**
  * @author MARCO
@@ -34,7 +37,6 @@ public class FileHandler {
 			ObjectOutputStream file_output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("DataBase\\"+nome_file)));
 			file_output.writeObject(aT);;
 			file_output.close();
-			System.out.println("File salvato!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,20 +49,23 @@ public class FileHandler {
 	 * @param nome_file Nome del file da cui leggere l'oggetto.
 	 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
 	 */
-	public static ArrayType caricaFile(String nome_file) {
+	public static ArrayType caricaFile(String nome_file) throws MyFileNotFoundException {
 		ArrayType aT=null;
 		try {
 			ObjectInputStream file_input = new ObjectInputStream(new BufferedInputStream(new FileInputStream("DataBase\\"+nome_file)));
 			aT=(ArrayType)file_input.readObject();
 			file_input.close();
-			System.out.println("File caricato!");
 		}
 		catch(ClassNotFoundException e){
 			e.printStackTrace();
 		}
+		catch (FileNotFoundException e) {
+			throw new MyFileNotFoundException ("File non trovato");
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		return aT;
 	}
 }

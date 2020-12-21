@@ -3,11 +3,14 @@
  */
 package stats_and_filters;
 
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
+import application.exception.MyFileNotFoundException;
+import application.exception.MyMissingFile;
 import application.file.*;
 import application.json.JsonHandler;
 import application.utility.ArrayType;
@@ -26,42 +29,77 @@ public class Statistics {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static Vector<Vector> difference(String data1, String data2) {
-		
-		ArrayType aT1=FileHandler.caricaFile(data1+".txt");
-		ArrayType aT2=FileHandler.caricaFile(data2+".txt");
-		
-		System.out.println("confronto deleted");
+	public static Vector<Vector> difference(String data1, String data2) throws MyMissingFile {
+		ArrayType aT1=new ArrayType();
+		ArrayType aT2=new ArrayType();
+		Vector<Vector> all=new Vector<Vector>();
+		boolean error=false;
+		try {
+			aT1=FileHandler.caricaFile(data1+".txt");
+		}
+		catch (MyFileNotFoundException e) {
+			data1=Integer.toString( Integer.parseInt(data1)-1);
+			
+			try {
+				aT1=FileHandler.caricaFile(data1+".txt");
+				error=true;
+			}
+			catch (MyFileNotFoundException a) {
+				throw new MyMissingFile ("File non trovato "+ data1 +" "+ Integer.parseInt(data1)+1);
+			}
+		}
 
-		Vector<Deleted> deleted = FileHandler.caricaFile(data2+".txt").get_vector_deleted();
-		Vector<Integer> erPosition=findEreseableDel(aT1.get_vector_deleted(), aT2.get_vector_deleted());
-		deleted=deletedVelementDel( deleted, erPosition);
+		try {
+			aT2=FileHandler.caricaFile(data2+".txt");
+		}
+		catch (MyFileNotFoundException e) {
+			data2=Integer.toString( Integer.parseInt(data2)+1);
+			
+			try {
+				aT2=FileHandler.caricaFile(data2+".txt");
+				error=true;
+			}
+			catch (MyFileNotFoundException a) {
+				throw new MyMissingFile ("File non trovati "+ (Integer.parseInt(data2)-1) +" "+ data2);
+			}
+		}
 		
-		Vector<Folder> folder = FileHandler.caricaFile(data2+".txt").get_vector_folder();
-		erPosition=findEreseableFol(  aT1.get_vector_folder(), aT2.get_vector_folder());
-		folder=deletedVelementFol( folder, erPosition);
-		
-		Vector<File> modificatedFile = FileHandler.caricaFile(data2+".txt").get_vector_file();
-		Vector<File> newAddedFile = FileHandler.caricaFile(data2+".txt").get_vector_file();
-		Vector<Vector> all=findEreseableFil(  aT1.get_vector_file(), aT2.get_vector_file(), data2);
-		erPosition=(Vector<Integer>)all.get(0); //non modificati da "eliminare"
-		Vector<Integer> newPosition=(Vector<Integer>)all.get(1);
-		//
-		modificatedFile=deletedVelementFil( modificatedFile, erPosition);
-		newAddedFile=deletedVelementFil( newAddedFile, newPosition);
-		
-		System.out.println("deleted elements: "+deleted.size());
-		System.out.println("new folders: "+folder.size());
-		System.out.println("\tmodificated files: "+modificatedFile.size());
-		System.out.println("\tnew added files: "+newAddedFile.size());
-		
-		//uso il Vector<Vector> all per fare il return senza usare un Vector<Vector> nuovo
-		all.clear();
-		all.add(deleted);
-		all.add(folder);
-		all.add(modificatedFile);
-		all.add(newAddedFile);
-		return all;
+		try {
+			Vector<Deleted> deleted = FileHandler.caricaFile(data2+".txt").get_vector_deleted();
+			Vector<Integer> erPosition=findEreseableDel(aT1.get_vector_deleted(), aT2.get_vector_deleted());
+			deleted=deletedVelementDel( deleted, erPosition);
+			
+			Vector<Folder> folder = FileHandler.caricaFile(data2+".txt").get_vector_folder();
+			erPosition=findEreseableFol(  aT1.get_vector_folder(), aT2.get_vector_folder());
+			folder=deletedVelementFol( folder, erPosition);
+			
+			Vector<File> modificatedFile = FileHandler.caricaFile(data2+".txt").get_vector_file();
+			Vector<File> newAddedFile = FileHandler.caricaFile(data2+".txt").get_vector_file();
+
+			all=findEreseableFil(  aT1.get_vector_file(), aT2.get_vector_file(), data2);
+			erPosition=(Vector<Integer>)all.get(0); //non modificati da "eliminare"
+			Vector<Integer> newPosition=(Vector<Integer>)all.get(1);
+			//
+			modificatedFile=deletedVelementFil( modificatedFile, erPosition);
+			newAddedFile=deletedVelementFil( newAddedFile, newPosition);
+			
+			System.out.println("deleted elements: "+deleted.size());
+			System.out.println("new folders: "+folder.size());
+			System.out.println("\tmodificated files: "+modificatedFile.size());
+			System.out.println("\tnew added files: "+newAddedFile.size());
+			
+			//uso il Vector<Vector> all per fare il return senza usare un Vector<Vector> nuovo
+			all.clear();
+			all.add(deleted);
+			all.add(folder);
+			all.add(modificatedFile);
+			all.add(newAddedFile);
+			if (error)
+				all.add(new Vector());
+		}
+		catch (Exception e) {
+		}
+	return all;
 	}
 	
 	private static Vector<Integer> findEreseableDel(Vector<Deleted> aT1, Vector<Deleted> aT2){

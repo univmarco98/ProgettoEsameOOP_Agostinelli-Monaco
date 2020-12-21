@@ -12,6 +12,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
+import application.exception.MyFileNotFoundException;
+import application.exception.MyMissingFile;
 import application.file.Deleted;
 import stats_and_filters.Statistics;
 
@@ -22,6 +24,7 @@ import stats_and_filters.Statistics;
 public class JsonHandler {
 		
 		public static Vector<JSONObject> format_list_folder(String data) {
+			
 			JSONArray jsonArr=null;
 			Vector<JSONObject> jo=new Vector<JSONObject>();
 			try {
@@ -71,11 +74,7 @@ public class JsonHandler {
 			try {
 				jsonObj = (JSONObject) JSONValue.parseWithException(data);
 				System.out.println("successo api e formattazione get metadata");
-				
-				//scrivo alcune caratteristiche del file
-				/*String file_id=(String)jsonObj.get("id");
-				System.out.println(file_id);*/
-				
+								
 			}
 			catch (ParseException e) {
 				e.printStackTrace();
@@ -92,8 +91,21 @@ public class JsonHandler {
 		
 
 		
-		public static JSONObject ritornaJ() {
-			Vector<Vector> vv=Statistics.difference("20201217","20201218");
+		public static JSONObject getJsonAllStats(String t1, String t2) throws MyMissingFile {
+			boolean error=false;
+			Vector<Vector> vv=new Vector<Vector>();
+			try {
+				if ( Integer.parseInt(t1) < Integer.parseInt(t2) )
+					vv=Statistics.difference(t1,t2);
+				else
+					vv=Statistics.difference(t2,t1);
+				if (vv.size()>4)
+					error=true;
+			}
+			catch (MyMissingFile a) {
+				throw new MyMissingFile (a.getMessage());
+			}
+			
 			Vector<Vector> vvjo=new Vector<Vector>();
 			int i=0;
 			Iterator<Vector> vvI=vv.iterator();
@@ -106,7 +118,6 @@ public class JsonHandler {
 				while(oI.hasNext()) {
 					Object tempO=oI.next();
 					vvjo.get(i).add(JsonHandler.toJSONObject((Deleted)tempO) );
-					System.out.println("tempO=---> "+ tempO );
 				}
 				i++;
 			
@@ -118,9 +129,51 @@ public class JsonHandler {
 			jo.put("Modified File", (Vector<JSONObject>) vvjo.get(2));
 			jo.put("New File", (Vector<JSONObject>) vvjo.get(3));
 			
-			jo.put("error", "false");
-			System.out.println( (Vector<JSONObject>) vvjo.get(0) );
-			System.out.println( "jo---> " + jo );
+			jo.put("error", error);
+			//System.out.println( "jo---> " + jo );
 			return jo;
+		}
+		
+		public static JSONObject getJsonPartialStats(String date1, String date2, JSONObject jobody) {
+			String type1=(String) jobody.get("type1");
+			String type2=(String) jobody.get("type2"); 
+			JSONObject all=new JSONObject();
+			try {
+				all = getJsonAllStats(date1, date2 );
+			}
+			catch (MyMissingFile e) {
+				JSONObject error = new JSONObject();
+				error.put("error", "true");
+				error.put("infoError", "File non trovati");
+				error.put("stackTrace", e.getMessage() );
+				return	error;
+			}
+			
+			
+			JSONObject parse = new JSONObject();
+			
+			if( (type1.equalsIgnoreCase("")) && (type2.equalsIgnoreCase(""))  ) {
+				parse=all;
+			}
+			else {
+				if( (type1.equalsIgnoreCase("file")) || (type2.equalsIgnoreCase("file"))  ) {
+					parse.put("New File", all.get("New File"));
+					parse.put("Modified File", all.get("Modified File"));
+				}
+				
+				if( (type1.equalsIgnoreCase("new file")) || (type2.equalsIgnoreCase("new file"))  ) {
+					parse.put("New File", all.get("New File"));
+				}
+				
+				if( (type1.equalsIgnoreCase("modified file")) || (type2.equalsIgnoreCase("modified file"))  ) {
+					parse.put("Modified File", all.get("Modified File"));
+				}
+				
+				if( (type1.equalsIgnoreCase("folder")) || (type2.equalsIgnoreCase("folder"))  ) {
+					parse.put("Folder", all.get("Folder"));
+				}
+			}
+			parse.put("error", all.get("error"));
+			return	parse;
 		}
 }

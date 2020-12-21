@@ -4,7 +4,12 @@
 package application;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedInputStream;
@@ -38,11 +43,58 @@ public class SimpleRESTController {
 		return("{\"result\":\"ok\"}");
 	}
 	
-	@GetMapping("/generalStats")
-	public JSONObject generalStats() {
-		return JsonHandler.ritornaJ();
+	/*@GetMapping("/generalStats")
+	public JSONObject generalStats( @RequestParam( name="date1")String date1 ,@RequestParam( name="date2")String date2 ) {
+		try {
+			return JsonHandler.getJsonAllStats(date1, date2 );
+		}
+		catch (NumberFormatException e) {
+			JSONObject error = new JSONObject();
+			error.put("error", "true");
+			error.put("infoError", "Formattazione errata date1/date2");
+			error.put("stackTrace", e.getMessage() );
+			return	error;
+		}
+	}*/
+	
+	@PostMapping("/generalStats")
+	public JSONObject generalStats2( @RequestParam( name="date1")String date1 ,@RequestParam( name="date2")String date2,@RequestBody String body ) {
+		try {
+			return JsonHandler.getJsonPartialStats(date1, date2, (JSONObject) JSONValue.parseWithException(body));
+		}
+		catch (NumberFormatException e) {
+			JSONObject error = new JSONObject();
+			error.put("error", "true");
+			error.put("infoError", "Formattazione errata date1/date2");
+			error.put("stackTrace", e.getMessage() );
+			return	error;
+		}
+		catch (ParseException e) {
+			JSONObject error = new JSONObject();
+			error.put("error", "true");
+			error.put("infoError", "Formattazione errata del body");
+			error.put("stackTrace", e.getMessage() );
+			return	error;
+		}
+		catch(NullPointerException e) {
+			JSONObject error = new JSONObject();
+			error.put("error", "true");
+			error.put("infoError", "type1/type2 assenti");
+			error.put("stackTrace", e.getMessage() );
+			return	error;
+			
+		}
+		/*catch(FileNotFoundException e) {
+			JSONObject error = new JSONObject();
+			error.put("error", "true");
+			error.put("infoError", "File non trovato");
+			error.put("stackTrace", e.getMessage() );
+			return	error;
+			
+		}*/
 	}
 	
+
 	@GetMapping("/test")
 	public JSONObject test() {
 		File file=new File("tag", "name", "path", "id");
