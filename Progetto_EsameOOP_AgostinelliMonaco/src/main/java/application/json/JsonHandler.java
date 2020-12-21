@@ -90,47 +90,36 @@ public class JsonHandler {
 			return(jsonObj.get(".tag").toString());
 		}
 		
+
+		
 		public static JSONObject ritornaJ() {
-			//Vector<Vector> vv=Statistics.difference("20201217","20201218");
-			Vector<Vector> vv=Statistics.difference("20201219","20201220");
+			Vector<Vector> vv=Statistics.difference("20201217","20201218");
+			Vector<Vector> vvjo=new Vector<Vector>();
+			int i=0;
 			Iterator<Vector> vvI=vv.iterator();
 			while(vvI.hasNext()) {
-
-				Vector<Object> temp=vvI.next();
-	//temp = deleted poi folder poi file poi file
 				
+				Vector<Object> temp=vvI.next();
+				vvjo.add(new Vector<JSONObject>());
+							
 				Iterator<Object> oI=temp.iterator();
 				while(oI.hasNext()) {
 					Object tempO=oI.next();
-					tempO=JsonHandler.toJSONObject((Deleted)tempO);
+					vvjo.get(i).add(JsonHandler.toJSONObject((Deleted)tempO) );
 					System.out.println("tempO=---> "+ tempO );
 				}
+				i++;
 			
 			}
 			JSONObject jo=new JSONObject();
-		/*	Vector<JSONObject> deleted=(Vector<JSONObject>) vv.get(0).clone();
-			Vector<JSONObject> folder=(Vector<JSONObject>) vv.get(1).clone();
-			Vector<JSONObject> modFile=(Vector<JSONObject>) vv.get(2).clone();
-			Vector<JSONObject> newFile=(Vector<JSONObject>) vv.get(3).clone();
 			
-			System.out.println("test---> "+vv.get(0).get(0) );
-			System.out.println("test---> "+modFile.toString() );
-						
-			jo.put("Deleted", deleted);
-			jo.put("Folder", folder);
+			jo.put("Deleted", (Vector<JSONObject>) vvjo.get(0));
+			jo.put("Folder", (Vector<JSONObject>) vvjo.get(1));
+			jo.put("Modified File", (Vector<JSONObject>) vvjo.get(2));
+			jo.put("New File", (Vector<JSONObject>) vvjo.get(3));
 			
-			jo.put("Modified File", modFile);
-			jo.put("New File", newFile);
-		//*/	
-			
-			jo.put("Deleted", (Vector<JSONObject>) vv.get(0));
-			jo.put("Folder", (Vector<JSONObject>) vv.get(1));
-			
-	/*		jo.put("Modified File", (Vector<JSONObject>) vv.get(2));
-			jo.put("New File", (Vector<JSONObject>) vv.get(3));
-	//*/		
 			jo.put("error", "false");
-			System.out.println( (Vector<JSONObject>) vv.get(0) );
+			System.out.println( (Vector<JSONObject>) vvjo.get(0) );
 			System.out.println( "jo---> " + jo );
 			return jo;
 		}
