@@ -16,6 +16,7 @@ public class Routine_GetAndSave_Datas {
 	public static void routine_run() {
 		//eseguo chiamata a list folder e formatto la risposta
 		ApiHandler api=new ApiHandler();
+		System.out.println(api.getToken());
 		
 		String strlistfolder=api.apicall_list_folder("");
 		
@@ -25,7 +26,7 @@ public class Routine_GetAndSave_Datas {
 		jsonlistfile.remove(jsonlistfile.lastElement());
 		
 		api.setCursor( (String) info_per_continuare.get("cursor") );
-		api.set_has_more( (String) info_per_continuare.get("has_more") );
+		api.setHasMore( (String) info_per_continuare.get("has_more") );
 		
 		//creo i 3 array di tipo diverso
 		Iterator<JSONObject> iterator =(Iterator<JSONObject>) jsonlistfile.iterator();		
@@ -51,7 +52,7 @@ public class Routine_GetAndSave_Datas {
 			jsonlistfile1.remove(jsonlistfile1.lastElement());
 
 			api.setCursor( (String) info_per_continuare.get("cursor") );
-			api.set_has_more( (String) info_per_continuare.get("has_more") );
+			api.setHasMore( (String) info_per_continuare.get("has_more") );
 			
 			Iterator<JSONObject> iterator1 =(Iterator<JSONObject>) jsonlistfile1.iterator();		
 			while(iterator1.hasNext()) {
@@ -71,7 +72,7 @@ public class Routine_GetAndSave_Datas {
 			i=i+1;
 			//effettuo chiama e formattazione get metadata
 			String path=temp.get_path();
-			String strgetmetadatar=new ApiHandler().apicall_get_metadata(path);
+			String strgetmetadatar=api.apicall_get_metadata(path);
 			JSONObject jsongetmetadata=JsonHandler.format_get_metadata(strgetmetadatar);
 			
 			//aggiorno temp(elemento in vectorfile->l'oggetto file) con le nuove informazioni

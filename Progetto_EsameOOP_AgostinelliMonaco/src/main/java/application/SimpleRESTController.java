@@ -39,6 +39,7 @@ public class SimpleRESTController {
 	
 	@GetMapping("/updateDatabase")
 	public String updateDatabase() {
+		System.out.println("Inizio procedura di update database...");
 		Routine_GetAndSave_Datas.routine_run();
 		return("{\"result\":\"ok\"}");
 	}

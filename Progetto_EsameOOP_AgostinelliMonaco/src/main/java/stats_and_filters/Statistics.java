@@ -33,7 +33,7 @@ public class Statistics {
 		ArrayType aT1=new ArrayType();
 		ArrayType aT2=new ArrayType();
 		Vector<Vector> all=new Vector<Vector>();
-		boolean error=false;
+		boolean error=false; //per getire delle date non conformi
 		try {
 			aT1=FileHandler.caricaFile(data1+".txt");
 		}
@@ -45,7 +45,8 @@ public class Statistics {
 				error=true;
 			}
 			catch (MyFileNotFoundException a) {
-				throw new MyMissingFile ("File non trovato "+ data1 +" "+ Integer.parseInt(data1)+1);
+				throw new MyMissingFile ("File non trovato "+ data1 /*data di 2° tentativo*/+
+						" "+ (Integer.parseInt(data1)+1)/*data di 1° tentativo*/ );
 			}
 		}
 
@@ -60,7 +61,8 @@ public class Statistics {
 				error=true;
 			}
 			catch (MyFileNotFoundException a) {
-				throw new MyMissingFile ("File non trovati "+ (Integer.parseInt(data2)-1) +" "+ data2);
+				throw new MyMissingFile ("File non trovati "+ (Integer.parseInt(data2)-1)/*data di 1° tentativo*/
+						+" "+ data2/*data di 2° tentativo*/);
 			}
 		}
 		
@@ -94,8 +96,9 @@ public class Statistics {
 			all.add(folder);
 			all.add(modificatedFile);
 			all.add(newAddedFile);
-			if (error)
-				all.add(new Vector());
+			if (error) //se error è true
+				all.add(new Vector()); // aggiungo un elemento Vector "vuoto" che poi mi servirà per capire
+									    // che non è stato possibile trovare il file di una delle due date
 		}
 		catch (Exception e) {
 		}

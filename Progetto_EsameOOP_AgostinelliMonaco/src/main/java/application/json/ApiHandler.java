@@ -11,36 +11,44 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.simple.JSONObject;
+
+import application.utility.FileHandler;
+
 
 /**
  * @author Matteo
  *
  */
 public class ApiHandler {
-	private static String token="apLbyiJWIa0AAAAAAAAAAaoW0voRsvsHVHefHG8-fiBH7UGA9tcr9JXvM4SWGncg";
+	private String token="";
 	private String cursor,has_more;
 	
 	/**
 	 * 
 	 */
 	public ApiHandler() {
-		
+		this.setToken();
 	}
 	
-	public void setToken(String token) {
-		this.token=token;
+	public void setToken() {
+		System.out.println("setToken() avviato");
+		this.token=FileHandler.caricaConfigs();
 	}
 	
 	public void setCursor(String cursor) {
 		this.cursor=cursor;
 	}
 	
-	public void set_has_more(String has_more) {
+	public void setHasMore(String has_more) {
 		this.has_more=has_more;
 	}
 	
-	public String get_has_more() {
-		return has_more;
+	public String getHas_more() {
+		return this.has_more;
+	}
+	public String getToken() {
+		return this.token;
 	}
 	
 	public String apicall_get_metadata(String path) {

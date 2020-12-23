@@ -5,14 +5,21 @@ package application.utility;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
+
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import application.exception.MyFileNotFoundException;
 
@@ -67,5 +74,22 @@ public class FileHandler {
 		}
 		
 		return aT;
+	}
+	
+	public static String caricaConfigs() {
+		String temp=new String("");
+		try {
+			BufferedReader file_input=new BufferedReader(new FileReader("Database\\Config.txt"));
+			temp=file_input.readLine();
+			System.out.println(temp);
+			file_input.close();
+		}
+		catch(IOException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(Exception e) { //abbiamo messo eccezione generica perche ParseException non funziona correttamente
+			System.out.println(e.getMessage());
+		}
+		return temp;
 	}
 }
