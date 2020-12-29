@@ -44,20 +44,6 @@ public class SimpleRESTController {
 		return("{\"result\":\"ok\"}");
 	}
 	
-	/*@GetMapping("/generalStats")
-	public JSONObject generalStats( @RequestParam( name="date1")String date1 ,@RequestParam( name="date2")String date2 ) {
-		try {
-			return JsonHandler.getJsonAllStats(date1, date2 );
-		}
-		catch (NumberFormatException e) {
-			JSONObject error = new JSONObject();
-			error.put("error", "true");
-			error.put("infoError", "Formattazione errata date1/date2");
-			error.put("stackTrace", e.getMessage() );
-			return	error;
-		}
-	}*/
-	
 	@PostMapping("/generalStats")
 	public JSONObject generalStats2( @RequestParam( name="date1")String date1 ,@RequestParam( name="date2")String date2,@RequestBody String body ) {
 		try {
@@ -76,36 +62,31 @@ public class SimpleRESTController {
 			error.put("infoError", "Formattazione errata del body");
 			error.put("stackTrace", e.getMessage() );
 			return	error;
-		}
-		catch(NullPointerException e) {
+		}		
+		catch(Exception e) {
 			JSONObject error = new JSONObject();
 			error.put("error", "true");
-			error.put("infoError", "type1/type2 assenti");
+			error.put("infoError", "C'e' stato un problema");
 			error.put("stackTrace", e.getMessage() );
 			return	error;
-			
 		}
-		/*catch(FileNotFoundException e) {
-			JSONObject error = new JSONObject();
-			error.put("error", "true");
-			error.put("infoError", "File non trovato");
-			error.put("stackTrace", e.getMessage() );
-			return	error;
-			
-		}*/
 	}
-	
+
+	@GetMapping("/searchByName")   //ricerca per nome in un determinato giorno
+	public JSONObject searchByName(@RequestParam( name="object")String oggetto,@RequestParam( name="date")String date) {
+		return JsonHandler.getJsonInfoByName(oggetto, date);
+	}
 
 	@GetMapping("/test")
 	public JSONObject test() {
 		File file=new File("tag", "name", "path", "id");
 		
 		Time lastModify=new Time(2020,12,18,10,10);
-		file.set_lastModify(lastModify);
+		file.setLastModify(lastModify);
 		String revision ="xtcfgvjbhk";
-		file.set_revision(revision);
+		file.setRevision(revision);
 		int size=102030;
-		file.set_size(size);
+		file.setSize(size);
 		
 		try {
 			ObjectOutputStream file_output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("prova1.txt")));

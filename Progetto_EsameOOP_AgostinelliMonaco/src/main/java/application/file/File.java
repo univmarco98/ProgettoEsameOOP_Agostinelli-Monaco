@@ -4,6 +4,7 @@
 package application.file;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 
@@ -30,29 +31,35 @@ public class File extends Folder implements Serializable {
 	//dopo aver fatto la list folder
 	}
 	
-	public void set_size(int size) {
+	public void setSize(int size) {
 		this.size=size;
 	}
 	
-	public void set_revision(String revision) {
+	public void setRevision(String revision) {
 		this.revision=revision;
 	}
 	
-	public void set_lastModify(Time lastModify) {
+	public void setLastModify(Time lastModify) {
 		this.lastModify=lastModify;
 	}
 	
-	public int get_size() {
+	public int getSize() {
 		return this.size;
 	}
 	
-	public String get_revision() {
+	public String getRevision() {
 		return this.revision;
 	}
 	
-	public Time get_lastModify() {
+	public Time getLastModify() {
 		return this.lastModify;
 	}
+	
+	public String getExtetion() {
+		String[] splittedArray=this.getName().split(Pattern.quote("."));
+		return splittedArray[splittedArray.length-1];
+	}
+	
 
 	public JSONObject toJSONObject() {
 		JSONObject result=super.toJSONObject();

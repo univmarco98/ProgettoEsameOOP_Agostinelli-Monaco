@@ -5,6 +5,7 @@ package application.utility;
 import org.json.simple.JSONObject;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Vector;
 import application.file.*;
 import application.json.JsonHandler;
@@ -71,7 +72,7 @@ public class ArrayType implements Serializable {
 		String path=jsonFile.get("path_display").toString();
 		String id  =jsonFile.get("id").toString();
 		
-		File objFile = new File("Folder", name, path, id);
+		File objFile = new File("File", name, path, id);
 		
 		vecFile.add(objFile);
 		
@@ -87,6 +88,31 @@ public class ArrayType implements Serializable {
 	
 	public Vector<File> get_vector_file() {
 		return vecFile;
+	}	
+	
+	public Vector<Deleted> fetch(String nome) {
+		Vector<Deleted> vecDel=new Vector<Deleted>();
+		
+		Iterator<Deleted> vDI=vecDeleted.iterator();
+		while(vDI.hasNext()) {
+			Deleted pippo=vDI.next();
+			if ( pippo.getName().contains(nome) )
+				vecDel.add(pippo);
+		}		
+		Iterator<Folder> vFI=vecFolder.iterator();
+		while(vFI.hasNext()) {
+			Deleted pippo=vFI.next();
+			if ( pippo.getName().contains(nome) )
+				vecDel.add(pippo);
+		}		
+		Iterator<File> vFiI=vecFile.iterator();
+		while(vFiI.hasNext()) {
+			Deleted pippo=vFiI.next();
+			if ( pippo.getName().contains(nome) )
+				vecDel.add(pippo);
+		}
+				
+		return vecDel;
 	}
 
 }

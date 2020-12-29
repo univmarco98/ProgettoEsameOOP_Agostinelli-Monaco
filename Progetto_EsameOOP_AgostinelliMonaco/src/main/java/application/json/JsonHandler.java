@@ -12,8 +12,11 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
 import application.exception.MyFileNotFoundException;
-import application.exception.MyMissingFile;
+import application.exception.MyMissingFileException;
+import application.exception.NotMatchedExtentionException;
 import application.file.*;
+import application.utility.ArrayType;
+import application.utility.FileHandler;
 import stats_and_filters.Statistics;
 
 /**
@@ -88,7 +91,7 @@ public class JsonHandler {
 			return(jsonObj.get(".tag").toString());
 		}
 		
-		public static JSONObject getJsonAllStats(String t1, String t2) throws MyMissingFile {
+		public static JSONObject getJsonAllStats(String t1, String t2) throws MyMissingFileException {
 			boolean error=false;
 			Vector<Vector> vv=new Vector<Vector>();
 			try {
@@ -99,8 +102,8 @@ public class JsonHandler {
 				if (vv.size()>4) //se è stato accodato il Vector vuoto allora setto error a true
 					error=true;
 			}
-			catch (MyMissingFile a) {
-				throw new MyMissingFile (a.getMessage());
+			catch (MyMissingFileException a) {
+				throw new MyMissingFileException (a.getMessage());
 			}
 			
 			Vector<Vector> vvjo=new Vector<Vector>();
@@ -131,7 +134,33 @@ public class JsonHandler {
 			return jo;
 		}
 		
-		public static JSONObject getJsonAllStats(String t1, String t2, int sizeMin, int sizeMax) throws MyMissingFile {
+		public static JSONObject getJsonAllStats(String t1, String t2, int sizeMin, int sizeMax, String file1Extention, String file2Extention) 
+																	throws MyMissingFileException, NotMatchedExtentionException {
+			String[] handledExtention={".7z",".bz2",".gz",".iso",".rar",".xz",".z",".zip",".djvu",".doc",".docx",".epub"
+					,".odt",".pdf",".rtf",".tex",".txt",".bmp",".gif",".ico",".jpg",".jpeg",".png",".psd",".tif",".tiff",
+					".aac",".flac",".m4a",".mp3",".ogg",".wma",".wav",".csv",".odp",".ods",".pps",".ppt",".pptx",".xls",
+					".xlsx",".avi",".flv",".m4v",".mkv",".mov",".mp4",".mpeg",".mpg",".wmv"};
+			
+			boolean notExtFilt;   //not extention filtering
+			
+			
+			if (file1Extention.equals("") && file2Extention.equals(""))
+				notExtFilt=true;
+			else {
+				boolean matched1=false, matched2=false;
+				for (String ex:handledExtention) {
+					if (ex.equals(file1Extention))
+						matched1=true;
+					if (ex.equals(file2Extention))
+						matched2=true;
+				}
+				notExtFilt=false;
+				if(matched1==false && matched2==false)
+					throw new NotMatchedExtentionException();
+			}
+			
+			
+			
 			boolean error=false;
 			Vector<Vector> vv=new Vector<Vector>();
 			try {
@@ -142,8 +171,8 @@ public class JsonHandler {
 				if (vv.size()>4) //se è stato accodato il Vector vuoto allora setto error a true
 					error=true;
 			}
-			catch (MyMissingFile a) {
-				throw new MyMissingFile (a.getMessage());
+			catch (MyMissingFileException a) {
+				throw new MyMissingFileException (a.getMessage());
 			}
 			
 			Vector<Vector> vvjo=new Vector<Vector>();
@@ -157,10 +186,23 @@ public class JsonHandler {
 				Iterator<Object> oI=temp.iterator();
 				while(oI.hasNext()) {
 					Object tempO=oI.next();
-					if(i>1) {
-						File tempOF=(File)tempO;
-						if((sizeMin<tempOF.get_size())&&(tempOF.get_size()<sizeMax)) {
+					if (i==0) 
+					{
+						Deleted tempOD=(Deleted)tempO;
+						String extetion="."+tempOD.getExtetion();
+						if ( notExtFilt || extetion.equals(file1Extention) || 
+											extetion.equals(file2Extention) )
 							vvjo.get(i).add(JsonHandler.toJSONObject((Deleted)tempO) );
+					}
+						
+					else if(i>1) {
+						File tempOF=(File)tempO;
+						if((sizeMin<tempOF.getSize())&&(tempOF.getSize()<sizeMax)) {
+							
+							String extetion="."+tempOF.getExtetion();
+							if ( notExtFilt || extetion.equals(file1Extention) || 
+												extetion.equals(file2Extention) )
+								vvjo.get(i).add(JsonHandler.toJSONObject((Deleted)tempO) );
 						}
 					}
 					else
@@ -182,39 +224,88 @@ public class JsonHandler {
 		}
 		
 		public static JSONObject getJsonPartialStats(String date1, String date2, JSONObject jobody) {
-			String type1=(String) jobody.get("type1");
-			String type2=(String) jobody.get("type2");
-			
+			String type1=new String();
+			String type2=new String();
+			String file1Extention=new String("11");
+			String file2Extention=new String("22");
 			int sizeMin=0;
-			if(jobody.get("sizeMin").toString().equals(""))
-				sizeMin=0;
-			else
-				sizeMin=Integer.parseInt(jobody.get("sizeMin").toString());
-			System.out.println(sizeMin);
-			
 			int sizeMax=0;
-			if(jobody.get("sizeMax").toString().equals("")) {
-				sizeMax=Integer.MAX_VALUE;
+			
+			try{
+				type1= jobody.get("type1").toString();
+				type2= jobody.get("type2").toString();
 			}
-			else if(Integer.MAX_VALUE<Long.parseLong(jobody.get("sizeMax").toString())) {
+			catch(NullPointerException e) {
+				JSONObject error = new JSONObject();
+				error.put("error", "true");
+				error.put("infoError", "type1/type2 assente/i");
+				error.put("stackTrace", e.getMessage() );
+				return	error;
+			}
+			
+			try {
+				file1Extention=jobody.get("file1Extention").toString();
+				file2Extention=jobody.get("file2Extention").toString();
+			}
+			catch(NullPointerException e) {
+				System.out.print("Eccezzione");
+				JSONObject error = new JSONObject();
+				error.put("error", "true");
+				error.put("infoError", "file1Extention/file2Extention assente/i");
+				error.put("stackTrace", e.getMessage() );
+				return	error;
+			}
+			
+			try {	
+				if(jobody.get("sizeMin").toString().equals(""))
+					sizeMin=0;
+				else
+					sizeMin=Integer.parseInt(jobody.get("sizeMin").toString());
+				
+				
+				if(jobody.get("sizeMax").toString().equals("")) {
 					sizeMax=Integer.MAX_VALUE;
+				}
+				else if(Integer.MAX_VALUE<Long.parseLong(jobody.get("sizeMax").toString())) {
+						sizeMax=Integer.MAX_VALUE;
+				}
+				else {
+					sizeMax=Integer.parseInt(jobody.get("sizeMax").toString());
+				}
 			}
-			else {
-				sizeMax=Integer.parseInt(jobody.get("sizeMax").toString());
+			catch(NullPointerException e) {
+				JSONObject error = new JSONObject();
+				error.put("error", "true");
+				error.put("infoError", "sizeMin/sizeMax assente/i");
+				error.put("stackTrace", e.getMessage() );
+				return	error;
 			}
-			System.out.println(sizeMax);
+			catch(NumberFormatException e) {
+				JSONObject error = new JSONObject();
+				error.put("error", "true");
+				error.put("infoError", "formato sizeMin/sizeMax errato");
+				error.put("stackTrace", e.getMessage() );
+				return	error;
+			}
 			
 			JSONObject all=new JSONObject();
 			try {
-				if((sizeMin==0) && (sizeMax==Integer.MAX_VALUE))
+				if((sizeMin==0) && (sizeMax==Integer.MAX_VALUE) && (file1Extention.equals("")) && (file2Extention.equals("")) )
 					all = getJsonAllStats(date1, date2 );
 				else
-					all = getJsonAllStats(date1, date2, sizeMin, sizeMax);
+					all = getJsonAllStats(date1, date2, sizeMin, sizeMax, file1Extention, file2Extention);
 			}
-			catch (MyMissingFile e) {
+			catch (MyMissingFileException e) {
 				JSONObject error = new JSONObject();
 				error.put("error", "true");
 				error.put("infoError", "File non trovati");
+				error.put("stackTrace", e.getMessage() );
+				return	error;
+			}
+			catch (NotMatchedExtentionException e) {
+				JSONObject error = new JSONObject();
+				error.put("error", "true");
+				error.put("infoError", "Formato estensione file non valido");
 				error.put("stackTrace", e.getMessage() );
 				return	error;
 			}
@@ -242,8 +333,47 @@ public class JsonHandler {
 				if( (type1.equalsIgnoreCase("folder")) || (type2.equalsIgnoreCase("folder"))  ) {
 					parse.put("Folder", all.get("Folder"));
 				}
+				
+				if (parse.size()==0) {
+					all.put("error", "true");  //sovrascrivo il precendete error in all
+					parse.put("infoError", "Il contenuto di type1/type2 non e' valido");
+				
+				}
+					
 			}
 			parse.put("error", all.get("error"));
 			return	parse;
 		}
+		
+		
+	public static JSONObject getJsonInfoByName (String oggetto, String date) {
+		ArrayType aT;
+		boolean error=false;
+		try {
+			aT=FileHandler.caricaFile(date+".txt");
+		}
+		catch (MyFileNotFoundException e) {
+			JSONObject errorJO = new JSONObject();
+			errorJO.put("error", "true");
+			errorJO.put("infoError", "File "+date+"non trovato");
+			errorJO.put("stackTrace", e.getMessage() );
+			return	errorJO;
+		}
+		Vector<Deleted> vDInfo = aT.fetch(oggetto);
+		Vector<JSONObject> vJInfo = new Vector<JSONObject>();
+		
+		Iterator<Deleted> vDII=vDInfo.iterator();
+		while (vDII.hasNext()){
+			Deleted temp=vDII.next();
+			vJInfo.add(JsonHandler.toJSONObject((Deleted)temp) ); 
+			System.out.println("\n"+JsonHandler.toJSONObject((Deleted)temp) );
+		}
+		
+		JSONObject returnJ=new JSONObject();
+		returnJ.put("info",vJInfo);
+		returnJ.put("error", error);
+		return returnJ;
+	}
+		
+	
 }

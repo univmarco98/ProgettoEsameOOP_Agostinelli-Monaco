@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import application.exception.MyFileNotFoundException;
-import application.exception.MyMissingFile;
+import application.exception.MyMissingFileException;
 import application.file.*;
 import application.json.JsonHandler;
 import application.utility.ArrayType;
@@ -29,7 +29,7 @@ public class Statistics {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static Vector<Vector> difference(String data1, String data2) throws MyMissingFile {
+	public static Vector<Vector> difference(String data1, String data2) throws MyMissingFileException {
 		ArrayType aT1=new ArrayType();
 		ArrayType aT2=new ArrayType();
 		Vector<Vector> all=new Vector<Vector>();
@@ -45,7 +45,7 @@ public class Statistics {
 				error=true;
 			}
 			catch (MyFileNotFoundException a) {
-				throw new MyMissingFile ("File non trovato "+ data1 /*data di 2° tentativo*/+
+				throw new MyMissingFileException ("File non trovato "+ data1 /*data di 2° tentativo*/+
 						" "+ (Integer.parseInt(data1)+1)/*data di 1° tentativo*/ );
 			}
 		}
@@ -61,7 +61,7 @@ public class Statistics {
 				error=true;
 			}
 			catch (MyFileNotFoundException a) {
-				throw new MyMissingFile ("File non trovati "+ (Integer.parseInt(data2)-1)/*data di 1° tentativo*/
+				throw new MyMissingFileException ("File non trovati "+ (Integer.parseInt(data2)-1)/*data di 1° tentativo*/
 						+" "+ data2/*data di 2° tentativo*/);
 			}
 		}
@@ -117,7 +117,7 @@ public class Statistics {
 			while (delI1.hasNext() ) {
 				Deleted tmp1=delI1.next();
 				
-				if( tmp1.get_path().equalsIgnoreCase(tmp2.get_path() ) ) {
+				if( tmp1.getPath().equalsIgnoreCase(tmp2.getPath() ) ) {
 					erPosition.add(position);
 					//System.out.println(tmp2+"  "+tmp1);
 					//System.out.println(deleted.remove(tmp1));
@@ -141,7 +141,7 @@ public class Statistics {
 			while (delI1.hasNext() ) {
 				Folder tmp1=delI1.next();
 				
-				if( tmp1.get_path().equalsIgnoreCase(tmp2.get_path() ) ) {
+				if( tmp1.getPath().equalsIgnoreCase(tmp2.getPath() ) ) {
 					erPosition.add(position);
 					//System.out.println(tmp2+"  "+tmp1);
 					//System.out.println(deleted.remove(tmp1));
@@ -163,12 +163,12 @@ public class Statistics {
 		boolean flag=false;
 		while(delI2.hasNext()) {
 			File tmp2 = delI2.next();
-			if( tmp2.get_lastModify().toString().equals(date2)  ) {
+			if( tmp2.getLastModify().toString().equals(date2)  ) {
 				Iterator<File> delI1=(Iterator<File>) aT1.iterator();
 				while (delI1.hasNext() ) {
 					File tmp1=delI1.next();
 					
-					if( (tmp1.get_id().equalsIgnoreCase(tmp2.get_id())) ) {//file non modificato
+					if( (tmp1.getId().equalsIgnoreCase(tmp2.getId())) ) {//file non modificato
 						erPosition.add(position);//è uguale a prima
 						flag=true;
 						break;

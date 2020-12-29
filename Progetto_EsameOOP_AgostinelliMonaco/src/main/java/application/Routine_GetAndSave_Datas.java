@@ -71,13 +71,13 @@ public class Routine_GetAndSave_Datas {
 			System.out.print(i+" - ");
 			i=i+1;
 			//effettuo chiama e formattazione get metadata
-			String path=temp.get_path();
+			String path=temp.getPath();
 			String strgetmetadatar=api.apicall_get_metadata(path);
 			JSONObject jsongetmetadata=JsonHandler.format_get_metadata(strgetmetadatar);
 			
 			//aggiorno temp(elemento in vectorfile->l'oggetto file) con le nuove informazioni
-			temp.set_revision(jsongetmetadata.get("rev").toString());
-			temp.set_size((int) Integer.parseInt( jsongetmetadata.get("size").toString()   ) );
+			temp.setRevision(jsongetmetadata.get("rev").toString());
+			temp.setSize((int) Integer.parseInt( jsongetmetadata.get("size").toString()   ) );
 			//strasformo in int una cosa castata in string che proviene da un oggetto json
 			//troppo brutto ma funzionale
 			
@@ -97,7 +97,7 @@ public class Routine_GetAndSave_Datas {
 			lastmod.set_hour(Integer.parseInt(veclastmod[3]) );
 			lastmod.set_minute(Integer.parseInt(veclastmod[4]) );
 			
-			temp.set_lastModify(lastmod);
+			temp.setLastModify(lastmod);
 		}//fine while
 		
 		
@@ -107,7 +107,7 @@ public class Routine_GetAndSave_Datas {
 		while (file2.hasNext() ) {
 			File temp=file2.next();
 			
-			System.out.println(temp.get_name());
+			System.out.println(temp.getName());
 		}//while
 		System.out.println("Ho finito");
 

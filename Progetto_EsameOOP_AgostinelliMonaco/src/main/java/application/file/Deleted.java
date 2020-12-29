@@ -4,6 +4,7 @@
 package application.file;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 
@@ -31,29 +32,35 @@ public class Deleted implements Serializable {
 	}
 
 	
-	public String get_path() {
+	public String getPath() {
 		return this.path;
 	}
 	
-	public String get_name() {
+	public String getName() {
 		return this.name;
 	}
 	
-	public String get_tag() {
+	public String getTag() {
 		return this.tag;
 	}
 
 	
-	public void set_path(String path) {
+	public void setPath(String path) {
 		this.path=path;
 	}
 	
-	public void set_name(String name) {
+	public void setName(String name) {
 		this.name=name;
 	}
 	
-	public void set_tag(String tag) {
+	public void setTag(String tag) {
 		this.tag=tag;
+	}
+	
+	
+	public String getExtetion() {
+		String[] splittedArray=this.getName().split(Pattern.quote("."));
+		return splittedArray[splittedArray.length-1];
 	}
 	
 	public JSONObject toJSONObject() {

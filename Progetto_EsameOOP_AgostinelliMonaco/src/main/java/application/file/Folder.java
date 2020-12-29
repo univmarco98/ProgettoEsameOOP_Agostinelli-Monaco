@@ -4,6 +4,7 @@
 package application.file;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 
@@ -23,12 +24,18 @@ public class Folder extends Deleted implements Serializable{
 		this.id=id;
 	}
 	
-	public String get_id() {
+	public String getId() {
 		return this.id;
 	}
 	
-	public void set_id(String id) {
+	public void setId(String id) {
 		this.id=id;
+	}
+	
+	//overriding del metodo in quanto una foder non ha estensione
+	public String getExtetion() {
+		return this.getName();
+
 	}
 	
 	public JSONObject toJSONObject() {
