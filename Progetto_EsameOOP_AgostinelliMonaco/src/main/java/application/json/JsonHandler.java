@@ -366,7 +366,7 @@ public class JsonHandler {
 		while (vDII.hasNext()){
 			Deleted temp=vDII.next();
 			vJInfo.add(JsonHandler.toJSONObject((Deleted)temp) ); 
-			System.out.println("\n"+JsonHandler.toJSONObject((Deleted)temp) );
+			//System.out.println("\n"+JsonHandler.toJSONObject((Deleted)temp) );
 		}
 		
 		JSONObject returnJ=new JSONObject();

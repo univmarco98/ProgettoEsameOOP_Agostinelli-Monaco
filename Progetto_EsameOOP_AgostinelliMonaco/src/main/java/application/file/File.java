@@ -68,4 +68,12 @@ public class File extends Folder implements Serializable {
 		result.put("revision", this.revision);
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "File [lastModify=" + lastModify + ", revision=" + revision + ", size=" + size
+				 + super.toString()+"]";
+	}
+
+	
 }

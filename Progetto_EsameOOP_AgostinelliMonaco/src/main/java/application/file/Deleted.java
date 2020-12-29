@@ -70,4 +70,9 @@ public class Deleted implements Serializable {
 		result.put("path", this.path);
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "Deleted [tag=" + tag + ", name=" + name + ", path=" + path + "]";
+	}
 }

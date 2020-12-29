@@ -21,13 +21,6 @@ import application.utility.FileHandler;
  *
  */
 public class Statistics {
-
-	/**
-	 * 
-	 */
-	public Statistics() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	public static Vector<Vector> difference(String data1, String data2) throws MyMissingFileException {
 		ArrayType aT1=new ArrayType();

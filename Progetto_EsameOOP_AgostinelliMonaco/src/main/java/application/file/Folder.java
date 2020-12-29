@@ -43,4 +43,10 @@ public class Folder extends Deleted implements Serializable{
 		result.put("id", this.id);
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "Folder [id=" + id + super.toString() +"]";
+	}
+
 }

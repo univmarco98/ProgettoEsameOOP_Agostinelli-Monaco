@@ -115,4 +115,9 @@ public class ArrayType implements Serializable {
 		return vecDel;
 	}
 
+	@Override
+	public String toString() {
+		return "ArrayType [vecDeleted=" + vecDeleted + ", vecFolder=" + vecFolder + ", vecFile=" + vecFile + "]";
+	}
+
 }

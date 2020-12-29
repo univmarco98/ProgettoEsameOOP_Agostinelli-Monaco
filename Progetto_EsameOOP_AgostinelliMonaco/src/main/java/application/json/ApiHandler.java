@@ -209,6 +209,11 @@ public class ApiHandler {
 		}
 		return data;
 	}
+
+	@Override
+	public String toString() {
+		return "ApiHandler [token=" + token + ", cursor=" + cursor + ", has_more=" + has_more + "]";
+	}
 	
 	
 	

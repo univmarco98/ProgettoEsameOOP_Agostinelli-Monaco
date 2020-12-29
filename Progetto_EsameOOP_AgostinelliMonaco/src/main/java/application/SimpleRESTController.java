@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
@@ -74,7 +75,16 @@ public class SimpleRESTController {
 
 	@GetMapping("/searchByName")   //ricerca per nome in un determinato giorno
 	public JSONObject searchByName(@RequestParam( name="object")String oggetto,@RequestParam( name="date")String date) {
-		return JsonHandler.getJsonInfoByName(oggetto, date);
+		String[] splittedObject=oggetto.split(Pattern.quote(","));
+		if(splittedObject.length==1)
+			return JsonHandler.getJsonInfoByName(oggetto, date);
+		else {
+			JSONObject result=new JSONObject();
+			for(String str : splittedObject) {
+				result.put(str, JsonHandler.getJsonInfoByName(str, date));
+			}
+			return result;
+		}
 	}
 
 	@GetMapping("/test")
