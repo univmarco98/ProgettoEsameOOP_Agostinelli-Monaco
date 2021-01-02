@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
 import application.file.*;
-import application.json.JsonHandler;
+import application.utility.json.JsonHandler;
 
 /**
  * @author Matteo

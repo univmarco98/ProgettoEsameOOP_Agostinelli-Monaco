@@ -12,9 +12,9 @@ import java.util.Vector;
 import application.exception.MyFileNotFoundException;
 import application.exception.MyMissingFileException;
 import application.file.*;
-import application.json.JsonHandler;
 import application.utility.ArrayType;
 import application.utility.FileHandler;
+import application.utility.json.JsonHandler;
 
 /**
  * @author Matteo

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package application.json;
+package application.utility.json;
 
 import java.util.Iterator;
 import java.util.Vector;

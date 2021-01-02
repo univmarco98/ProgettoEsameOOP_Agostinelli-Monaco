@@ -27,9 +27,9 @@ import javax.swing.JOptionPane;
 import stats_and_filters.Statistics;
 import application.file.Deleted;
 import application.file.File;
-import application.json.JsonHandler;
 import application.utility.ArrayType;
 import application.utility.Time;
+import application.utility.json.JsonHandler;
 
 /**
  * @author MARCO
