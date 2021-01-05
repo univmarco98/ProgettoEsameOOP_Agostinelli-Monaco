@@ -1,12 +1,12 @@
-/**
- * 
- */
 package application.exception;
 
 /**
- * @author Matteo
+ * Eccezione lanciata per indicate un'estensione di un file non contemplata dal programma
+ * es: Il metodo JsonHandler.getJsonAllStats(....) viene lanciata se entrambe le estensioni non rientrano nelle estensioni di quelle valide
+ * @author Marco and Matteo
  *
  */
+
 public class NotMatchedExtentionException extends Exception{
 
 	/**

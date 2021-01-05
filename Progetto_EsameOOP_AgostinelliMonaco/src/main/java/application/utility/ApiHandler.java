@@ -1,6 +1,3 @@
-/**
- * 
- */
 package application.utility;
 
 import java.io.BufferedReader;
@@ -12,40 +9,69 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * @author Matteo
+ * 
+ * @author Marco and Matteo
  *
  */
+
 public class ApiHandler {
 	private String token="";
 	private String cursor,has_more;
 	
 	/**
-	 * 
+	 * Costruttore di ApiHandler
 	 */
 	public ApiHandler() {
 		this.setToken();
 	}
 	
+	/**
+	 * metodo per settare il token attraverso il metodo FileHandler.caricaConfigs()
+	 */
 	public void setToken() {
 		System.out.println("setToken() avviato");
 		this.token=FileHandler.caricaConfigs();
 	}
 	
+	/** 
+	 * Metodo per settare l'attributo cursor di ApiHandler
+	 * @param cursor stringa ideantificativa del punto di break della rotta Dropbox list_folder
+	 */
 	public void setCursor(String cursor) {
 		this.cursor=cursor;
 	}
 	
+	/** 
+	 * Metodo per settare l'attributo has_more di ApiHandler
+	 * @param has_more stringa che indica se chiamare la rotta list_folder/continue (ovvero il metodo
+	 * 		 apicall_list_folder_continue())
+	 */
 	public void setHasMore(String has_more) {
 		this.has_more=has_more;
 	}
 	
+	/**
+	 * Metodo che restituisce l'attributo has_more
+	 * @return has_more in formato String
+	 */
 	public String getHas_more() {
 		return this.has_more;
 	}
+	
+	/**
+	 * Metodo che restituisce l'attributo token
+	 * @return token in formato String
+	 */
 	public String getToken() {
 		return this.token;
 	}
 	
+	/**
+	 * Metodo che invoca la rotta get_metadata di Dropbox, acquisisce il risultato e lo restituisce
+	 * come una stringa, la quale stringa rispetta il formato di un file json testuale
+	 * @param path path in formato String
+	 * @return stringa rappresentativa del risultato della rotta Dropbox get_metadata
+	 */
 	public String apicall_get_metadata(String path) {
 		
 		String data = "";
@@ -99,6 +125,12 @@ public class ApiHandler {
 		return data;
 	}
 	
+	/**
+	 * Metodo che invoca la rotta list_folder di Dropbox, acquisisce il risultato e lo restituisce
+	 * come una stringa, la quale stringa rispetta il formato di un file json testuale
+	 * @param path path in formato String
+	 * @return stringa rappresentativa del risultato della rotta Dropbox list_folder
+	 */
 	public String apicall_list_folder(String path) {
 		
 		String data = "";
@@ -155,6 +187,12 @@ public class ApiHandler {
 		return data;
 	}
 	
+	/**
+	 * Metodo che fa la stessa cosa di apicall_list_folder() ma che è necessario invocare
+	 * nel caso in cui il risultato del solo apicall_list_folder() sia troppo lungo per poter
+	 * essere gestito in una sola passata(cioè attraverso la verifica dell'attributo json "has_more")
+	 * @return stringa rappresentativa del risultato della rotta Dropbox list_folder
+	 */
 	public String apicall_list_folder_continue() {
 		
 		String data = "";
@@ -210,9 +248,4 @@ public class ApiHandler {
 		return "ApiHandler [token=" + token + ", cursor=" + cursor + ", has_more=" + has_more + "]";
 	}
 	
-	
-	
-	
-	
-	
-}//class
+}

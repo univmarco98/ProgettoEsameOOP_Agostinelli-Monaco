@@ -12,11 +12,19 @@ import application.utility.FileHandler;
 import application.utility.Time;
 import application.utility.json.JsonHandler;
 
+/**
+ * classe che si occupa di raccogliere tutte le info dei file che sono presenti nel dropbox
+ * per poi salvarle in un file di testo attraverso i metodi della classe FileHandler
+ * @author Marco
+ * @author Matteo
+ * @see FileHandler
+ */
+
 public class Routine_GetAndSave_Datas {
 	public static void routine_run() {
 		//eseguo chiamata a list folder e formatto la risposta
 		ApiHandler api=new ApiHandler();
-		System.out.println(api.getToken());
+		//System.out.println(api.getToken());
 		
 		String strlistfolder=api.apicall_list_folder("");
 		
@@ -25,6 +33,8 @@ public class Routine_GetAndSave_Datas {
 		JSONObject info_per_continuare = jsonlistfile.lastElement();
 		jsonlistfile.remove(jsonlistfile.lastElement());
 		
+		/*mi salvo le info che mi servono per continuare il list folder in caso la mole di info sia
+		 	troppo grande*/
 		api.setCursor( (String) info_per_continuare.get("cursor") );
 		api.setHasMore( (String) info_per_continuare.get("has_more") );
 		
@@ -78,7 +88,7 @@ public class Routine_GetAndSave_Datas {
 			//aggiorno temp(elemento in vectorfile->l'oggetto file) con le nuove informazioni
 			temp.setRevision(jsongetmetadata.get("rev").toString());
 			temp.setSize((int) Integer.parseInt( jsongetmetadata.get("size").toString()   ) );
-			//strasformo in int una cosa castata in string che proviene da un oggetto json
+			//trasformo in int una cosa castata in string che proviene da un oggetto json
 			//troppo brutto ma funzionale
 			
 			//formatto la stringa dell'orario in modo comodo

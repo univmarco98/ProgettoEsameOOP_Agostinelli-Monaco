@@ -1,6 +1,3 @@
-/**
- * 
- */
 package application.utility.json;
 
 import java.util.Iterator;
@@ -20,11 +17,25 @@ import application.utility.FileHandler;
 import stats_and_filters.Statistics;
 
 /**
- * @author MARCO
+ * 
+ * Classe che espone metodi utili a trattare e manipolare, i tipi di dati di cui il programma
+ * si serve, per rappresentare i metadata di dropbox. Questa lo fa secondo un approccio di manipolazione volto
+ * alla rappresentazione dei metadata tramite JSONObject o eventualmente Vector di JSONObject
+ * 
+ * @author Marco 
+ * @author Matteo
  *
  */
+
 public class JsonHandler {
 		
+	/**
+	 * Metodo che formatta il risultato della chiamata list_folder o list_folder/continue di Dropbox
+	 * in un oportuno Vector di JSONObject
+	 * 
+	 * @param data String che contiene il risultato della rotta di Dropbox list_folder o list_folder/continue 
+	 * @return Vector di JSONObject
+	 */
 		public static Vector<JSONObject> format_list_folder(String data) {
 			
 			JSONArray jsonArr=null;
@@ -64,12 +75,13 @@ public class JsonHandler {
 		
 		
 		
+		
 		/**
-		 * Metodo per scaricare un oggetto utilizzando API.
-		 * Posso scegliere se scaricare un JSONObject oppure un JSONArray.
+		 * Metodo che formatta il risultato della chiamata get_metadata di Dropbox
+		 * in un oportuno JSONObject
 		 * 
-		 * @param url URL da cui utilizzare la chiamata API.
-		 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
+		 * @param data String che contiene il risultato della rotta di Dropbox get_metadata 
+		 * @return	JSONObject
 		 */
 		public static JSONObject format_get_metadata(String data) {
 			JSONObject jsonObj=null;
@@ -83,14 +95,36 @@ public class JsonHandler {
 			}
 			return jsonObj;
 		}
+		
+		/**
+		 * Metodo per poter convertite un oggetto Deleted in un JSONObject
+		 * 
+		 * @param d oggetto Deleted
+		 * @return JSONObject
+		 */
 		public static JSONObject toJSONObject(Deleted d) {
 			return d.toJSONObject();
 		}
 		
-		public static String getFileType(JSONObject jsonObj) {
-			return(jsonObj.get(".tag").toString());
+		/**
+		 * Metodo per poter ottenere in tag di un JSONObject
+		 * 
+		 * @param  jO JSONObject in input
+		 * @return tag in formato String
+		 */
+		public static String getFileType(JSONObject jO) {
+			return(jO.get(".tag").toString());
 		}
 		
+		/**
+		 * Metodo che prendee in input 2 date (yyyymmdd) in formato String, elabora i metadati
+		 * contenuti nei file, relativi a queste 2 date. Infine restituisce un JSONObject che contiene tali differenze
+		 * 
+		 * @param t1 prima data in formato String
+		 * @param t2 seconda data in formato String
+		 * @return	JSONObject che contiene le differenze temporali
+		 * @throws MyMissingFileException viene lanciata se non viene trovato uno dei 2 file per 2 volte
+		 */
 		public static JSONObject getJsonAllStats(String t1, String t2) throws MyMissingFileException {
 			boolean error=false;
 			Vector<Vector> vv=new Vector<Vector>();
@@ -134,6 +168,24 @@ public class JsonHandler {
 			return jo;
 		}
 		
+		/**
+		 * Metodo che prendee in input 2 date (yyyymmdd) in formato String, dimensione minima e dimensione massima e 2 estensioni.
+		 *  Elabora i metadati contenuti nei file, relativi a queste 2 date e filtra le informazioni.
+		 *  Infine restituisce un JSONObject che contiene tali differenze
+		 * 
+		 * @param t1 prima data in formato String
+		 * @param t2 seconda data in formato String
+		 * 
+		 * @param sizeMin dimensione minima in formato  int
+		 * @param sizeMax dimensioni massima in formato int
+		 * 
+		 * @param file1Extention estensione del primo file in fromato String
+		 * @param file2Extention estensione del secondo file in fromato String
+		 * @return JSONObject che contiene le differenze del filtraggio multiplo(per data e/o dimensione file e/o estensione)
+		 * 
+		 * @throws MyMissingFileException viene lanciata se non viene trovato uno dei 2 file per 2 volte
+		 * @throws NotMatchedExtentionException viene lanciata nel caso in cui entrambe le estensioni inserite non siano contemplate dal programma
+		 */
 		public static JSONObject getJsonAllStats(String t1, String t2, int sizeMin, int sizeMax, String file1Extention, String file2Extention) 
 																	throws MyMissingFileException, NotMatchedExtentionException {
 			String[] handledExtention={".7z",".bz2",".gz",".iso",".rar",".xz",".z",".zip",".djvu",".doc",".docx",".epub"
@@ -223,6 +275,25 @@ public class JsonHandler {
 			return jo;
 		}
 		
+		/**
+		 * Metodo che prendee in input 2 date (yyyymmdd) in formato String e il body della richiesta POST in formato JSONObject 
+		 * Elabora i metadati contenuti nei file, relativi a queste 2 date e filtra le informazioni in base alle indicazioni del body.
+		 * Infine restituisce un JSONObject che contiene tali differenze
+		 * 
+		 * @param date1 prima data in formato String
+		 * @param date2 seconda data in formato String
+		 * @param jobody 
+		 * 				{
+		 *					"type1":"" 
+		 *				    "type2":""
+		 *				    "file1Extention":""
+		 *				    "file2Extention":""
+		 *				    "sizeMin":""
+		 *				    "sizeMax":""
+		 *				}
+		 * @return JSONObject che contiene le differenze del filtraggio multiplo(per data e/o dimensione file e/o estensione)
+		 *	filtrando anche per tipo di elemento(file, folder o deletd)
+		 */
 		public static JSONObject getJsonPartialStats(String date1, String date2, JSONObject jobody) {
 			String type1=new String();
 			String type2=new String();
@@ -345,8 +416,14 @@ public class JsonHandler {
 			return	parse;
 		}
 		
-		
-	public static JSONObject getJsonInfoByName (String oggetto, String date) {
+	/**
+	 * Metodo che estrapola i metadata del contenuto di uno specifico elemento, in una specifica gionata	
+	 * @param nomeElemento nome dell'elemento completo di estensione (nome.estensione)
+	 * @param date data nella quale cercare l'elemento
+	 * @return JSONObject contenente il risultato della ricerca(possono esserci più risultati inerenti allo
+	 * 		stesso nome)
+	 */
+	public static JSONObject getJsonInfoByName (String nomeElemento, String date) {
 		ArrayType aT;
 		boolean error=false;
 		try {
@@ -359,7 +436,7 @@ public class JsonHandler {
 			errorJO.put("stackTrace", e.getMessage() );
 			return	errorJO;
 		}
-		Vector<Deleted> vDInfo = aT.fetch(oggetto);
+		Vector<Deleted> vDInfo = aT.fetch(nomeElemento);
 		Vector<JSONObject> vJInfo = new Vector<JSONObject>();
 		
 		Iterator<Deleted> vDII=vDInfo.iterator();

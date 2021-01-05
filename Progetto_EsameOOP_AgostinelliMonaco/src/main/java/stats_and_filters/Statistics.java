@@ -1,11 +1,5 @@
-/**
- * 
- */
 package stats_and_filters;
 
-import java.io.FileNotFoundException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -14,14 +8,31 @@ import application.exception.MyMissingFileException;
 import application.file.*;
 import application.utility.ArrayType;
 import application.utility.FileHandler;
-import application.utility.json.JsonHandler;
 
 /**
+ * Classe utile a elaborare statistiche manipolando file di testo con salvati oggetti di tipo ArrayType
+ * @author Marco
  * @author Matteo
  *
  */
+
 public class Statistics {
 	
+	/**
+	 *  Metodo che, prendendo in input 2 date, estrapola tutte le differenze, tra le due date in questione,
+	 * 	a livello di elementi creati, modificati o cancellati e le restituisce sotto forma di Vector di Vector.
+	 * 	Dove i Vector interni si riferiscono rispettivamente a: elenco di Deleted, elenco di Folder, elenco di File modificati
+	 *  e elenco di nuovi File.
+	 *  Viene inoltre aggiunto un elemento Vector "vuoto" indicativo del fatto
+	 *		che non è stato possibile trovare il file di una delle due date
+	 *  
+	 * @param data1 prima data in formato String
+	 * @param data2 seconda data in formato String
+	 * @return ritorna il Vector dove i Vector interni si riferiscono rispettivamente a: elenco di Deleted, elenco di Folder, elenco di File modificati
+	 *  e elenco di nuovi File.
+	 * @throws MyMissingFileException viene lanciata nel caso in cui entrambi i tentativi di apertura file
+	 * 	non vadano a buon fine
+	 */
 	public static Vector<Vector> difference(String data1, String data2) throws MyMissingFileException {
 		ArrayType aT1=new ArrayType();
 		ArrayType aT2=new ArrayType();

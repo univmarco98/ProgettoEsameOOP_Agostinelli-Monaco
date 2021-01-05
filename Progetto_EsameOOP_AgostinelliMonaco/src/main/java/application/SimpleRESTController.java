@@ -1,6 +1,3 @@
-/**
- * 
- */
 package application;
 
 import org.json.simple.JSONObject;
@@ -19,34 +16,56 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Vector;
 import java.util.regex.Pattern;
 
-import javax.swing.JOptionPane;
-
-import stats_and_filters.Statistics;
-import application.file.Deleted;
 import application.file.File;
-import application.utility.ArrayType;
 import application.utility.Time;
 import application.utility.json.JsonHandler;
 
 /**
- * @author MARCO
- *
+ * Classe che svolge le veci di un controller che espone delle API-REST attraverso delle rotte 
+ * 	ben definite
+ * 
+ * @author Marco
+ * @author Matteo
  */
+
 @RestController
 public class SimpleRESTController {
-	
+	/**
+	 * Rotta per aggiornare il database, salvando i dati relativi alla data in cui viene invocata tale rotta
+	 * @return JSON contenente l'esito positivo della procedura
+	 */
 	@GetMapping("/updateDatabase")
 	public String updateDatabase() {
-		System.out.println("Inizio procedura di update database...");
-		Routine_GetAndSave_Datas.routine_run();
-		return("{\"result\":\"ok\"}");
+		try {
+			System.out.println("Inizio procedura di update database...");
+			Routine_GetAndSave_Datas.routine_run();
+			return("{\"result\":\"ok\"}");
+		}
+		catch(Exception e){
+			return("{\"result\":\"error during updating database\"}");
+		}
 	}
 	
+	/**
+	 * Rotta per ottenerere le infomazioni sulle differenze(creazione, modifica e cancellazione) 
+	 * tra cartelle e file del Dropbox tra due date specificate
+	 * @param date1 data inizio confronto
+	 * @param date2 data fine confronto
+	 * @param body body della richiesta in formato testo Json: 
+	 * 				{
+     *					"type1":"" 
+	 *				    "type2":""
+	 *				    "file1Extention":""
+	 *				    "file2Extention":""
+	 *				    "sizeMin":""
+	 *				    "sizeMax":""
+	 *				}
+	 * @return JSON contenente le info richieste e l'esito positivo della procedura
+	 */
 	@PostMapping("/generalStats")
-	public JSONObject generalStats2( @RequestParam( name="date1")String date1 ,@RequestParam( name="date2")String date2,@RequestBody String body ) {
+	public JSONObject generalStats( @RequestParam( name="date1")String date1 ,@RequestParam( name="date2")String date2,@RequestBody String body ) {
 		try {
 			return JsonHandler.getJsonPartialStats(date1, date2, (JSONObject) JSONValue.parseWithException(body));
 		}
@@ -73,6 +92,15 @@ public class SimpleRESTController {
 		}
 	}
 
+	/**
+	 * Rotta per ottenerere le infomazioni di un elemento(file o folder o deleted) all'interno di dropbox in uno specifico giorno 
+	 * 
+	 * @param oggetto nome dell'elemento da cercare, possono essere piu' di uno separati da una virgola (",") 
+	 * @param date data(yyyymmdd) dove cercare l'elemento 
+     *
+	 * @return JSON contenente le info richieste e l'esito positivo della procedura
+	 */
+	
 	@GetMapping("/searchByName")   //ricerca per nome in un determinato giorno
 	public JSONObject searchByName(@RequestParam( name="object")String oggetto,@RequestParam( name="date")String date) {
 		String[] splittedObject=oggetto.split(Pattern.quote(","));
@@ -86,7 +114,14 @@ public class SimpleRESTController {
 			return result;
 		}
 	}
-
+	
+	/**
+	 * Rotta per testare il funzionamento generale dell'applicazione. 
+	 * Crea un oggetto file, lo salva nella working directori del programma, lo carica leggendolo e poi lo restituisce come json al chiamante della rotta
+	 * 
+	 * @return JSON contenente le informazioni dell'oggetto file creato per effettuare il test
+	 */
+	
 	@GetMapping("/test")
 	public JSONObject test() {
 		File file=new File("tag", "name", "path", "id");
@@ -99,7 +134,7 @@ public class SimpleRESTController {
 		file.setSize(size);
 		
 		try {
-			ObjectOutputStream file_output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("prova1.txt")));
+			ObjectOutputStream file_output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("pippo.txt")));
 			file_output.writeObject(file);;
 			file_output.close();
 			System.out.println("File salvato!");
@@ -108,7 +143,7 @@ public class SimpleRESTController {
 		}
 		File file2=null;
 		try {
-			ObjectInputStream file_input = new ObjectInputStream(new BufferedInputStream(new FileInputStream("prova1.txt")));
+			ObjectInputStream file_input = new ObjectInputStream(new BufferedInputStream(new FileInputStream("pippo.txt")));
 			file2=(File)file_input.readObject();
 			file_input.close();
 			System.out.println("File caricato!");

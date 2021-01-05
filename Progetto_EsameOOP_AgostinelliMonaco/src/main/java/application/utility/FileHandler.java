@@ -1,6 +1,3 @@
-/**
- * 
- */
 package application.utility;
 
 import java.io.BufferedInputStream;
@@ -24,16 +21,21 @@ import org.json.simple.JSONValue;
 import application.exception.MyFileNotFoundException;
 
 /**
- * @author MARCO
+ * 
+ * Classe che rende disponibili alcuni metodi utili al salvataggio e caricamento su/da file
+ * delle classi utilizzate per manipolare le informazioni sui metadata di dropbox
+ * @author Marco and Matteo
  *
  */
+
 public class FileHandler {
 	/**
-	 * Metodo per salvare un oggetto in un file di testo .json.
-	 * Posso scegliere se salvare un JSONObject oppure un JSONArray.
+	 * Metodo per salvare un oggetto ArrayType in un file di testo (.txt)
+	 * Il salvataggio prevede che il file sia nominato con la data del giorno
+	 * del salvataggio stesso.
+	 * es: se si salva in data 5 gennaio 2020 allora il file sarà nominato: 20200105.txt
 	 * 
-	 * @param nome_file Nome del file in cui salvare l'oggetto.
-	 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
+	 * @param aT Oggetto ArrayType che verrà salvato su file
 	 */
 	public static void saveFile(ArrayType aT) {
 		SimpleDateFormat data = new SimpleDateFormat();
@@ -50,11 +52,11 @@ public class FileHandler {
 	}
 	
 	/**
-	 * Metodo per leggere un oggetto da un file di testo .json.
-	 * Posso scegliere se caricare un JSONObject oppure un JSONArray.
+	 * Metodo per caricare un oggetto ArrayType da un file di testo nominato come "yyyymmdd.txt"
 	 * 
-	 * @param nome_file Nome del file da cui leggere l'oggetto.
-	 * @param isObject Specifica se l'oggetto da salvare � un JSONObject oppure un JSONArray.
+	 * @param nome_file Oggetto String che rappresenta il nome del file da caricare ("yyyymmdd.txt")
+	 * @exception MyFileNotFoundException Se il file non viene trovato(FileNotFoundException) allora viene lanciata l'eccezione MyFileNotFoundException
+	 * @return ArrayType contenente i metadata giornalieri del file
 	 */
 	public static ArrayType caricaFile(String nome_file) throws MyFileNotFoundException {
 		ArrayType aT=null;
@@ -76,6 +78,11 @@ public class FileHandler {
 		return aT;
 	}
 	
+	/**
+	 * Metodo per caricare un il token, in formato String ,dal file di testo nominato "Config.txt" che deve essere 
+	 * residente nella catella DataBase
+	 * @return ritorna il token in formato String
+	 */
 	public static String caricaConfigs() {
 		String temp=new String("");
 		try {

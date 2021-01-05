@@ -11,6 +11,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * 
+ * Classe per effettuare i test
+ * @author Marco
+ * @author Matteo
+ *
+ */
+
 class applicationTest {
 
 	File testFile;
