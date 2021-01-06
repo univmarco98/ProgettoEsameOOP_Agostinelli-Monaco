@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -21,13 +22,19 @@ import application.utility.json.JsonHandler;
  */
 
 public class Routine_GetAndSave_Datas {
-	public static void routine_run() {
+	public static void routine_run() throws IOException {
 		//eseguo chiamata a list folder e formatto la risposta
 		ApiHandler api=new ApiHandler();
 		//System.out.println(api.getToken());
-		
-		String strlistfolder=api.apicall_list_folder("");
-		
+		String strlistfolder=new String();
+		try
+		{
+			strlistfolder=api.apicall_list_folder("");
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			throw new IOException();
+		}
 		Vector<JSONObject> jsonlistfile=JsonHandler.format_list_folder(strlistfolder);
 		
 		JSONObject info_per_continuare = jsonlistfile.lastElement();

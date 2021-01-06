@@ -405,6 +405,10 @@ public class JsonHandler {
 					parse.put("Folder", all.get("Folder"));
 				}
 				
+				if( (type1.equalsIgnoreCase("deleted")) || (type2.equalsIgnoreCase("deleted"))  ) {
+					parse.put("Deleted", all.get("Deleted"));
+				}
+				
 				if (parse.size()==0) {
 					all.put("error", "true");  //sovrascrivo il precendete error in all
 					parse.put("infoError", "Il contenuto di type1/type2 non e' valido");

@@ -43,6 +43,9 @@ public class SimpleRESTController {
 			Routine_GetAndSave_Datas.routine_run();
 			return("{\"result\":\"ok\"}");
 		}
+		catch(IOException e){
+			return("{\"result\":\"errore di tipo input/output,il token potrebbe essere errato o mancante\"}");
+		}
 		catch(Exception e){
 			return("{\"result\":\"error during updating database\"}");
 		}

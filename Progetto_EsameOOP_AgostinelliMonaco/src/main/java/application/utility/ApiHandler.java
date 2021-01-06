@@ -130,8 +130,9 @@ public class ApiHandler {
 	 * come una stringa, la quale stringa rispetta il formato di un file json testuale
 	 * @param path path in formato String
 	 * @return stringa rappresentativa del risultato della rotta Dropbox list_folder
+	 * @throws IOException 
 	 */
-	public String apicall_list_folder(String path) {
+	public String apicall_list_folder(String path) throws IOException {
 		
 		String data = "";
 		String line = "";
@@ -180,6 +181,7 @@ public class ApiHandler {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			throw new IOException();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
