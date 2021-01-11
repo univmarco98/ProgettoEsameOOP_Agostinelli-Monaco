@@ -1,3 +1,4 @@
+
 # ProgettoEsameOOP_Agostinelli-Monaco
 Repository dedita al progetto d'esame di Object Oriented Programming a.a. 2020/2021
 
@@ -139,7 +140,7 @@ Questo progetto si pone l'obiettivo della creazione di una applicazione Java vol
 ## Rotte applicazione
 Attraverso un qualsiasi applicativo in grado di mandare richieste HTTP REST (per esempio Postman) è possibile interrogare le api esposte dalla nostra applicazione, mediante delle richieste POST o GET che si descrivono in seguito:
 
- - update database  **GET**
+ - updateDatabase  **GET**
  Questa rotta viene utilizzata per avviare la procedura di aggiornamento del database che consiste nel salvataggio di un file di testo nominato con la data del salvataggio.
  
 	<a rel="nofollow" href=" - http://localhost:8080/updateDatabase" hreflang="eng" target="_blank">  http://localhost:8080/updateDatabase</a>
@@ -150,7 +151,7 @@ Attraverso un qualsiasi applicativo in grado di mandare richieste HTTP REST (per
 		}
 	```
 
- - general Stats **POST**
+ - generalStats **POST**
  Con questa rotta si puo' richiedere l'elenco di elementi (file, cartelle, elementi cancellati) diversi tra le date (datae1 e date2).
  Questo elenco puo' essere filtrato aggiungendo i giusti attributi al body.
 	<a rel="nofollow" href="http://localhost:8080/generalStats?date1=20201228&date2=20201229" hreflang="eng" target="_blank">http://localhost:8080/generalStats?date1=20201228&date2=20201229</a>
@@ -236,7 +237,7 @@ Rotta per testare il funzionamento generale dell'applicazione.
 		}
 	```
 	
- - seach by name  **POST**
+ - seachByName  **POST**
 	 Rotta per ottenerere le infomazioni di un elemento(file o folder o deleted) all'interno di dropbox in uno specifico giorno.
  
 	<a rel="nofollow" href="http://localhost:8080/searchByName?object=1_Introduzione.pdf&date=20201228
@@ -275,13 +276,16 @@ Rotta per testare il funzionamento generale dell'applicazione.
 
 ## FrameWork e Software
 
- - **jsonsimple**	libreria utilizata per modellare i file json in java
-- **Spring** Spring Boot è un framework per lo sviluppo di applicazioni web basate su codice Java (precisamente su stack Java) offre vantaggi riguardo la parziale automazione del setup e configurazione del progetto e di gestione delle dipendenze.
-	-   **Maven**  strumento di build automation utilizzato per la gestione delle dipendenze dell'applicazione
- -    **JUnit**   utilizzato per fare test unitari sul codice
+ - **jsonsimple:**	libreria utilizata per modellare i file json in oggetti java
+ - **Spring (v2.4.1):** Spring Boot è un framework per lo sviluppo di applicazioni web basate su codice Java (precisamente su stack Java) offre vantaggi riguardo la parziale automazione del setup e configurazione del progetto e di gestione delle dipendenze.
+		Dipendenze Applicazione Spring pre-impostate:
+	 - Spring Boot DevTools
+	 - Spring Web che peraltro include il server Tomcat embedded nella nostra applicazione, il quale viene usato per esporre le api all'utente
+ - **Maven:**  strumento di build automation utilizzato per la gestione delle dipendenze dell'applicazione
+ -    **JUnit:**  Framework utilizzato per fare test unitari sul codice
 
 ## Sviluppatori
 | Sviluppatore |Email  |Contributo|
 |--|--|--|
 | Marco|s1081890@studenti.univpm.it | 1/2
-| Matteo |s1083908@studenti.univpm.it  |1/2
+| Matteo |s1083908@studenti.univpm.it  | 1/2
