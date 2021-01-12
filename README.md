@@ -160,11 +160,11 @@ Attraverso un qualsiasi applicativo in grado di mandare richieste HTTP REST (per
 
 	```json
 		{
-		    "type1":""
-		    "type2":""
-		    "file1Extention":""
-		    "file2Extention":""
-		    "sizeMin":""
+		    "type1":"",
+		    "type2":"",
+		    "file1Extention":"",
+		    "file2Extention":"",
+		    "sizeMin":"",
 		    "sizeMax":""
 		}
 	```

@@ -188,10 +188,11 @@ public class JsonHandler {
 		 */
 		public static JSONObject getJsonAllStats(String t1, String t2, int sizeMin, int sizeMax, String file1Extention, String file2Extention) 
 																	throws MyMissingFileException, NotMatchedExtentionException {
-			String[] handledExtention={".7z",".bz2",".gz",".iso",".rar",".xz",".z",".zip",".djvu",".doc",".docx",".epub"
+		
+			String[] handledExtention=FileHandler.caricaEstensioni();  /*{".7z",".bz2",".gz",".iso",".rar",".xz",".z",".zip",".djvu",".doc",".docx",".epub"
 					,".odt",".pdf",".rtf",".tex",".txt",".bmp",".gif",".ico",".jpg",".jpeg",".png",".psd",".tif",".tiff",
 					".aac",".flac",".m4a",".mp3",".ogg",".wma",".wav",".csv",".odp",".ods",".pps",".ppt",".pptx",".xls",
-					".xlsx",".avi",".flv",".m4v",".mkv",".mov",".mp4",".mpeg",".mpg",".wmv"};
+					".xlsx",".avi",".flv",".m4v",".mkv",".mov",".mp4",".mpeg",".mpg",".wmv"};//*/
 			
 			boolean notExtFilt;   //not extention filtering
 			

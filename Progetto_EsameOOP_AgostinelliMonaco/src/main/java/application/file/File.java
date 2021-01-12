@@ -19,9 +19,9 @@ import application.utility.Time;
 public class File extends Folder implements Serializable {
 
 	private static final long serialVersionUID = 1;
-	Time lastModify;
-	String revision;
-	int size;
+	private Time lastModify;
+	private String revision;
+	private int size;
 	
 	/**
 	 * Costruttore classe File
