@@ -79,7 +79,7 @@ public class FileHandler {
 	}
 	
 	/**
-	 * Metodo per caricare un il token, in formato String ,dal file di testo nominato "Config.txt" che deve essere 
+	 * Metodo per caricare il token, in formato String ,dal file di testo nominato "Config.txt" che deve essere 
 	 * residente nella catella DataBase
 	 * @return ritorna il token in formato String
 	 */
@@ -99,4 +99,37 @@ public class FileHandler {
 		}
 		return temp;
 	}
+
+
+	/**
+	 * Metodo per caricare le estensioni, in formato String[] ,dal file di testo nominato "Config.txt" che deve essere 
+	 * residente nella catella DataBase.
+	 * Le estnesioni devono essere separate dal carattere jolly @
+	 * es: .7z@.bz2@.gz@.iso@.rar 
+	 * @return ritorna le estensioni in formato String[]
+	 */
+	public static String[] caricaEstensioni() {
+		String temp=new String("");
+		try {
+			BufferedReader file_input=new BufferedReader(new FileReader("Database\\Config.txt"));
+			temp=file_input.readLine();  //nella prima riga c'e' il token (non mi serve qui)
+			temp=file_input.readLine();  //nella seconda le estensioni
+			
+			file_input.close();
+		}
+		catch(IOException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(Exception e) { //abbiamo messo eccezione generica perche ParseException non funziona correttamente
+			System.out.println(e.getMessage());
+		}
+		String[] estensioni=temp.split("@");
+		
+		System.out.print("Estensioni accettate: ");
+		for(String est:estensioni)
+			System.out.print(est+"  ");
+		System.out.println();
+		return estensioni;
+	}
+
 }

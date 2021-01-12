@@ -1,1 +1,2 @@
 apLbyiJWIa0AAAAAAAAAAaoW0voRsvsHVHefHG8-fiBH7UGA9tcr9JXvM4SWGncg
+.7z@.bz2@.gz@.iso@.rar@.xz@.z@.zip@.djvu@.doc@.docx@.epub@.odt@.pdf@.rtf@.tex@.txt@.bmp@.gif@.ico@.jpg@.jpeg@.png@.psd@.tif@.tiff@.aac@.flac@.m4a@.mp3@.ogg@.wma@.wav@.csv@.odp@.ods@.pps@.ppt@.pptx@.xls@.xlsx@.avi@.flv@.m4v@.mkv@.mov@.mp4@.mpeg@.mpg@.wmv
